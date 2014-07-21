@@ -13,6 +13,9 @@ import junit.framework.TestCase;
 
 public class EChequeTest extends TestCase {
 	ECheque undertest;
+	
+	String teststring = "test";
+	boolean testbool = false;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -24,37 +27,115 @@ public class EChequeTest extends TestCase {
 	}
 
 	@Test
-	public void testGettersSetters()
+	
+	public void testaccountholder()
 	{
-		String teststring = "test";
-		boolean testbool = false;
-		
-		
 		undertest.setaccountholder(teststring);
+		
+		if(!undertest.getaccountholder().equals(teststring))
+		{
+			fail("The setter or getter didn't work.");
+		}
+		
+	}
+
+	public void testaccountnumber()
+	{
 		undertest.setaccountNumber(teststring);
+		
+		if(!undertest.getaccountNumber().equals(teststring))
+		{
+			fail("The setter or getter didn't work.");
+		}
+	}
+
+	public void testamountofmoney()
+	{
 		undertest.setamountofMony(teststring);
+		
+		if(!undertest.getMoney().equals(teststring))
+		{
+			fail("The setter or getter didn't work.");
+		}
+	}
+	
+	public void testbankname()
+	{
 		undertest.setbankname(teststring);
+		
+		if(!undertest.getbankname().equals(teststring))
+		{
+			fail("The setter or getter didn't work.");
+		}
+	}
+	
+	public void testbanksig()
+	{
 		undertest.setbanksignature(teststring.getBytes());
+		
+		if(!Arrays.equals(undertest.getbanksignature(), teststring.getBytes()))
+		{
+			fail("The setter or getter didn't work.");
+		}
+	}
+	
+	public void testchequenumber()
+	{
 		undertest.setchequeNumber(teststring);
+		
+		if(!undertest.getchequeNumber().equals(teststring))
+		{
+			fail("The setter or getter didn't work.");
+		}
+	}
+	
+	public void testcurrencytype()
+	{
 		undertest.setcurrencytype(teststring);
+		
+		if(!undertest.getcurrencytype().equals(teststring))
+		{
+			fail("The setter or getter didn't work.");
+		}
+	}
+	
+	public void testdrawersig()
+	{
 		undertest.setdrawersiganure(teststring.getBytes());
+		
+		if(!Arrays.equals(undertest.getdrawersiganure(), teststring.getBytes()))
+		{
+			fail("The setter or getter didn't work.");
+		}
+	}
+	
+	public void testearnday()
+	{
 		undertest.setearnday(teststring);
+		
+		if(!undertest.getearnday().equals(teststring))
+		{
+			fail("The setter or getter didn't work.");
+		}
+	}
+
+	public void testguaranteed()
+	{
 		undertest.setguaranteed(testbool);
+		
+		if(undertest.getguaranteed()!=testbool)
+		{
+			fail("The setter or getter didn't work.");
+		}
+	}
+	
+	public void testpayto()
+	{
 		undertest.setpayToOrderOf(teststring);
 		
-		if (!(undertest.getaccountholder().equals(teststring) &
-		undertest.getaccountNumber().equals(teststring) &
-		undertest.getbankname().equals(teststring) &
-		Arrays.equals(undertest.getbanksignature(), teststring.getBytes()) &
-		undertest.getchequeNumber().equals(teststring) &
-		undertest.getcurrencytype().equals(teststring) &
-		Arrays.equals(undertest.getdrawersiganure(), teststring.getBytes()) &
-		undertest.getearnday().equals(teststring) &
-		(undertest.getguaranteed()==testbool) &
-		undertest.getMoney().equals(teststring) &
-		undertest.getpayToOrderOf().equals(teststring)))
+		if(!undertest.getpayToOrderOf().equals(teststring))
 		{
-			fail("The setters or getters didn't work.");
+			fail("The setter or getter didn't work.");
 		}
 	}
 }

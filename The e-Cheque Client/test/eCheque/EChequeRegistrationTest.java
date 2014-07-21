@@ -30,26 +30,76 @@ public class EChequeRegistrationTest extends TestCase {
 		EChequeRegisteration registration = new EChequeRegisteration();
 	}
 
-	@Test
-	public void testGettersSetters()
+	@Test	
+	
+	public void testAccountNumber()
 	{
 		undertest.setAccountNumber(teststring+ "1");
+		
+		if(!undertest.getAccountNumber().equals(teststring+ "1"))
+		{
+			fail("The getter or setter didn't work");
+		}
+		
+	}
+	
+	public void testBankAddress()
+	{
 		undertest.setBankAddress(teststring+ "2");
+		
+		if(!undertest.getBankAddress().equals(teststring+ "2"))
+		{
+			fail("The getter or setter didn't work");
+		}
+	}
+	
+	public void testBankName()
+	{
 		undertest.setBankName(teststring+ "3");
+		
+		if(!undertest.getBankName().equals(teststring+ "3"))
+		{
+			fail("The getter or setter didn't work");
+		}
+	}
+	
+	public void testClientName()
+	{
 		undertest.setClientName(teststring+ "4");
+		
+		if(!undertest.getClientName().equals(teststring+ "4"))
+		{
+			fail("The getter or setter didn't work");
+		}
+	}
+	
+	public void testEWalletLoaction()
+	{
 		undertest.setEWalletLoaction(teststring+ "5");
+		
+		if(!undertest.getEWalletLoaction().equals(teststring + "5"))
+		{
+			fail("The getter or setter didn't work");
+		}
+	}
+	
+	public void testPassword()
+	{
 		undertest.setPasword(testint+ 1);
+		
+		if(!(undertest.getPasword()==testint +1))
+		{
+			fail("The getter or setter didn't work");
+		}
+	}
+	
+	public void testUsername()
+	{
 		undertest.setUsername(testint+2);
 		
-		if(!(undertest.getAccountNumber().equals(teststring+ "1") &
-		undertest.getBankAddress().equals(teststring+ "2")&
-		undertest.getBankName().equals(teststring+ "3")&
-		undertest.getClientName().equals(teststring+ "4")&
-		undertest.getEWalletLoaction().equals(teststring + "5")&
-		(undertest.getPasword()==testint +1)&
-		(undertest.getUsername()== testint +2)))
+		if(!(undertest.getUsername()== testint +2))
 		{
-			fail ("The getters or setters did not work.");
+			fail ("The getter or setter did not work.");
 		}
 	}
 }
