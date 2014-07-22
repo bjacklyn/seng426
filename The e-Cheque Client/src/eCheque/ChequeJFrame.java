@@ -589,21 +589,21 @@ public class ChequeJFrame extends javax.swing.JFrame {
                                    AESCrypt aesCrypt = new AESCrypt();
                                    Key AES128 = aesCrypt.inilizeAESKeyByPassword(signPass);
                                    Cipher cipher = aesCrypt.initializeCipher(AES128,1);
-                                   InputStream in = new FileInputStream(eChequeReg.getEWalletLoaction()+"\\Security Tools\\Private Key.key");
-                                   OutputStream out = new FileOutputStream(eChequeReg.getEWalletLoaction()+"\\Security Tools\\PrivateKey.key"); 
+                                   InputStream in = new FileInputStream(eChequeReg.getEWalletLoaction()+ File.pathSeparator +"Security Tools" + File.pathSeparator + "Private Key.key");
+                                   OutputStream out = new FileOutputStream(eChequeReg.getEWalletLoaction()+ File.pathSeparator + "Security Tools"+ File.pathSeparator +"PrivateKey.key"); 
                                    
                                    // decrypt the private key with the AES key and delete the plain key
                                    aesCrypt.crypt(in,out,cipher);
                                    in.close();
                                    out.close();
-                                   ObjectInputStream objIn = new ObjectInputStream (new FileInputStream(eChequeReg.getEWalletLoaction()+"\\Security Tools\\PrivateKey.key"));
+                                   ObjectInputStream objIn = new ObjectInputStream (new FileInputStream(eChequeReg.getEWalletLoaction()+ File.pathSeparator +"Security Tools"+File.pathSeparator+"PrivateKey.key"));
                                    
                                    // load the user private key.
                                    PrivateKey privKey = (PrivateKey)objIn.readObject();
                                    objIn.close();
                                    
                                    // delete the un secure key.
-                                   File control = new File(eChequeReg.getEWalletLoaction()+"\\Security Tools\\PrivateKey.key");
+                                   File control = new File(eChequeReg.getEWalletLoaction()+ File.pathSeparator +"Security Tools"+ File.pathSeparator +"PrivateKey.key");
                                    control.delete();
                                    JOptionPane.showMessageDialog(null,"Load private key");
                                    
@@ -627,7 +627,7 @@ public class ChequeJFrame extends javax.swing.JFrame {
                                    
                                    //Save the cheque after you sign it
                                    EChequeIO drawCheque = new EChequeIO();
-                                   drawCheque.savecheque(chequeObj,eChequeReg.getEWalletLoaction()+"\\My Cheques\\"+chequeObj.getchequeNumber()+".sec");
+                                   drawCheque.savecheque(chequeObj,eChequeReg.getEWalletLoaction()+ File.pathSeparator +"My Cheques" + File.pathSeparator+chequeObj.getchequeNumber()+".sec");
                                    JOptionPane.showMessageDialog(null,"Done");
                                    
                                                                     

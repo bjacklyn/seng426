@@ -11,12 +11,15 @@ package eCheque;
  * @author Saad
  */
 //import com.Trendy.swing.plaf.TrendyLookAndFeel;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.security.PrivateKey;
+
 import javax.swing.UIManager;
 import javax.swing.JOptionPane;
+
 import java.net.ServerSocket;
 
 
@@ -107,7 +110,7 @@ public class ReceiveChequeJFrame extends javax.swing.JFrame {
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Via e-mail", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 0)));
-        jButton1.setIcon(new javax.swing.ImageIcon("E:\\e-Cheque Project Final Version\\Photo\\icon-zip.gif"));
+        jButton1.setIcon(new javax.swing.ImageIcon("E:"+File.pathSeparator+"e-Cheque Project Final Version"+File.pathSeparator+"Photo"+File.pathSeparator+"icon-zip.gif"));
         jButton1.setText("Un ZIP Cheque");
 
         org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
@@ -179,7 +182,7 @@ public class ReceiveChequeJFrame extends javax.swing.JFrame {
             //Get the sever side digital certificate.
             DigitalCertificate serverDC= new DigitalCertificate();
             DigitalCertificateIO readServerDC = new DigitalCertificateIO();
-            serverDC = readServerDC.readDigitalCertificate(eChequeReg.getEWalletLoaction()+"\\Security Tools\\"+eChequeReg.getClientName()+"DigCert.edc");
+            serverDC = readServerDC.readDigitalCertificate(eChequeReg.getEWalletLoaction()+File.pathSeparator+"Security Tools"+File.pathSeparator+eChequeReg.getClientName()+"DigCert.edc");
             
             //Initialize the server connection.
             if(!serverStartFlage){
