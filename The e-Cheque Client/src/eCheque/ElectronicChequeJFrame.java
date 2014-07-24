@@ -358,21 +358,21 @@ public class ElectronicChequeJFrame extends javax.swing.JFrame {
                         AESCrypt aesCrypt = new AESCrypt();
                         Key AES128 = aesCrypt.inilizeAESKeyByPassword(passTemp);
                         Cipher cipher = aesCrypt.initializeCipher(AES128,1);
-                        InputStream in = new FileInputStream(registerdUser.getEWalletLoaction()+File.pathSeparator+"Security Tools"+File.pathSeparator+"Private Key.key");
-                        OutputStream out = new FileOutputStream(registerdUser.getEWalletLoaction()+File.pathSeparator+"Security Tools"+File.pathSeparator+"PrivateKey.key"); 
+                        InputStream in = new FileInputStream(registerdUser.getEWalletLoaction()+File.separator+"Security Tools"+File.separator+"Private Key.key");
+                        OutputStream out = new FileOutputStream(registerdUser.getEWalletLoaction()+File.separator+"Security Tools"+File.separator+"PrivateKey.key"); 
                                   
                         // decrypt the private key with the AES key and delete the plain key
                         aesCrypt.crypt(in,out,cipher);
                         in.close();
                         out.close();
-                        ObjectInputStream objIn = new ObjectInputStream (new FileInputStream(registerdUser.getEWalletLoaction()+File.pathSeparator+"Security Tools"+File.pathSeparator+"PrivateKey.key"));
+                        ObjectInputStream objIn = new ObjectInputStream (new FileInputStream(registerdUser.getEWalletLoaction()+File.separator+"Security Tools"+File.separator+"PrivateKey.key"));
                                   
                         //load the user private key.
                         privKey = (PrivateKey)objIn.readObject();
                         objIn.close();
          
                         // delete the un secure key.
-                        File control = new File(registerdUser.getEWalletLoaction()+File.pathSeparator+"Security Tools"+File.pathSeparator+"PrivateKey.key");
+                        File control = new File(registerdUser.getEWalletLoaction()+File.separator+"Security Tools"+File.separator+"PrivateKey.key");
                         control.delete();
                         receiveChequeWindow = new ReceiveChequeJFrame(registerdUser,privKey);
                         privateKeyFlag = true;
