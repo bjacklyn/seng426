@@ -96,7 +96,7 @@ private OutputStream socketOutput;
           
           //store client digital certificate
           DigitalCertificateIO dcIO = new DigitalCertificateIO();
-          dcIO.SaveDC(registDC,"Bank"+File.pathSeparator+registerClient.getClientName()+"DC.edc");
+          dcIO.SaveDC(registDC,"Bank"+File.separator+registerClient.getClientName()+"DC.edc");
           
           socketOutputObject.writeObject("registeration complete");
           socketOutputObject.flush();
