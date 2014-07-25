@@ -110,7 +110,6 @@ public class ReceiveChequeJFrame extends javax.swing.JFrame {
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Via e-mail", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 0)));
-        jButton1.setIcon(new javax.swing.ImageIcon("E:"+File.separator+"e-Cheque Project Final Version"+File.separator+"Photo"+File.separator+"icon-zip.gif"));
         jButton1.setText("Un ZIP Cheque");
 
         org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);

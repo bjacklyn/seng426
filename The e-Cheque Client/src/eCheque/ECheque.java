@@ -14,6 +14,7 @@
 package eCheque;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 //this class  for inter data cheque form user
 public class ECheque implements Serializable
@@ -30,14 +31,18 @@ public class ECheque implements Serializable
      private byte[] banksignature;
      private byte[] drawersiganure;
      
-     
-     
-     
-     
      //to ener data we use set function 
     /** Creates a new instance of ECheque */
     public ECheque() {
         
+    }
+    
+    
+    public int lazyHash()
+    {
+    	return (Arrays.hashCode(banksignature) * 17) ^
+    			(Arrays.hashCode(drawersiganure)*13) ^ 
+    			(Integer.parseInt(chequeNumber)*31);
     }
     
     public void setaccountholder(String x)

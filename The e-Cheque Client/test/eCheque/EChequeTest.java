@@ -20,6 +20,21 @@ public class EChequeTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		undertest = new ECheque();
+		
+		String teststring = "2143";
+		boolean testbool = true;
+		
+		undertest.setaccountholder(teststring);
+		undertest.setaccountNumber(teststring);
+		undertest.setamountofMony(teststring);
+		undertest.setbankname(teststring);
+		undertest.setbanksignature(teststring.getBytes());
+		undertest.setchequeNumber(teststring);
+		undertest.setcurrencytype(teststring);
+		undertest.setdrawersiganure(teststring.getBytes());
+		undertest.setearnday(teststring);
+		undertest.setguaranteed(testbool);
+		undertest.setpayToOrderOf(teststring);
 	}
 
 	protected void tearDown() throws Exception {
@@ -27,6 +42,32 @@ public class EChequeTest extends TestCase {
 	}
 
 	@Test
+	
+	public void testlazyHashsame()
+	{
+		ECheque a = new ECheque();
+		a.setbanksignature(undertest.getbanksignature());
+		a.setdrawersiganure(undertest.getdrawersiganure());
+		a.setchequeNumber(undertest.getchequeNumber());
+		
+		if (a.lazyHash()!=undertest.lazyHash())
+		{
+			fail("Hashing produced different hash for same inputs.");
+		}
+	}
+	
+	public void testlazyHashdiff()
+	{
+		ECheque a = new ECheque();
+		a.setbanksignature(undertest.getbanksignature());
+		a.setdrawersiganure(undertest.getdrawersiganure());
+		a.setchequeNumber("3452");
+		
+		if (a.lazyHash()==undertest.lazyHash())
+		{
+			fail("Hashing produced same hash for different inputs.");
+		}
+	}
 	
 	public void testaccountholder()
 	{

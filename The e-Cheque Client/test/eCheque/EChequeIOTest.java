@@ -1,5 +1,6 @@
 package eCheque;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -14,16 +15,31 @@ public class EChequeIOTest extends TestCase {
 	ECheque testchek;
 	EChequeIO undertest;
 	
-	String testout = "test\\eCheque\\resources\\testout";
-	String testin = "test\\eCheque\\resources\\testin";
-	String badtestin = "test\\eCheque\\resources\\badtestin";
-	String roundtest = "test\\eCheque\\resources\\roundtest";
+	String testout = "test"+File.separator+"eCheque"+File.separator+"resources"+File.separator+"testout";
+	String testin = "test"+File.separator+"eCheque"+File.separator+"resources"+File.separator+"testin";
+	String badtestin = "test"+File.separator+"eCheque"+File.separator+"resources"+File.separator+"badtestin";
+	String roundtest = "test"+File.separator+"eCheque"+File.separator+"resources"+File.separator+"roundtest";
 
 	protected void setUp() throws Exception {
 		super.setUp();
 		
 		undertest = new EChequeIO();
 		testchek = new ECheque();
+		
+		String teststring = "2143";
+		boolean testbool = true;
+		
+		testchek.setaccountholder(teststring);
+		testchek.setaccountNumber(teststring);
+		testchek.setamountofMony(teststring);
+		testchek.setbankname(teststring);
+		testchek.setbanksignature(teststring.getBytes());
+		testchek.setchequeNumber(teststring);
+		testchek.setcurrencytype(teststring);
+		testchek.setdrawersiganure(teststring.getBytes());
+		testchek.setearnday(teststring);
+		testchek.setguaranteed(testbool);
+		testchek.setpayToOrderOf(teststring);
 	}
 
 	protected void tearDown() throws Exception {
@@ -63,8 +79,13 @@ public class EChequeIOTest extends TestCase {
 		{
 			temp = undertest.readcheque(badtestin);
 		}
-		catch (Exception e)
+		catch (ClassNotFoundException e)
 		{
+			//nothing!
+		}
+		catch (IOException e)
+		{
+			return;
 		}
 		fail("Didn't catch invalid input."); //Should throw an exception on invalid ECheque file
 	}
@@ -72,34 +93,24 @@ public class EChequeIOTest extends TestCase {
 	@Test
 	public void testRoundTripReadWrite()
 	{
-		ECheque a = new ECheque();
 		ECheque b = null;
-		String teststring = "smoop";
-		boolean testbool = true;
-		
-		a.setaccountholder(teststring);
-		a.setaccountNumber(teststring);
-		a.setamountofMony(teststring);
-		a.setbankname(teststring);
-		a.setbanksignature(teststring.getBytes());
-		a.setchequeNumber(teststring);
-		a.setcurrencytype(teststring);
-		a.setdrawersiganure(teststring.getBytes());
-		a.setearnday(teststring);
-		a.setguaranteed(testbool);
-		a.setpayToOrderOf(teststring);
 		
 		try
 		{
-			undertest.savecheque(a, roundtest);
-			b = undertest.readcheque(roundtest);
+			undertest.savecheque(testchek, roundtest);
 		}
 		catch (Exception e)
 		{
-			fail ("Exception!" + e.getMessage());
+			fail ("Exception! "  + e.toString());
 		}
-		
-		if (!areEqual(a,b))
+		try{
+			b = undertest.readcheque(roundtest);
+		}
+		catch(Exception e)
+		{
+			fail(e.toString());
+		}
+		if (!areEqual(testchek,b))
 		{
 			fail("Round trip failed!");
 		}
