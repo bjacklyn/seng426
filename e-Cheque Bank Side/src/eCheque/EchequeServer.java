@@ -46,7 +46,7 @@ public class EchequeServer implements Runnable {
 				ServerConnection.getInputStream());
 	}
 
-	private void processConnection() {
+	private void processConnection() throws IOException {
 		boolean sessionDone = false;
 		BankMode mode;
 		if (!sessionDone) {
@@ -72,7 +72,7 @@ public class EchequeServer implements Runnable {
 		}
 	}
 
-	private void registerClientInfo() {
+	private void registerClientInfo() throws IOException {
 		EChequeRegisteration registerClient = null;
 		try {
 			registerClient = (EChequeRegisteration) socketInputObject
@@ -128,7 +128,7 @@ public class EchequeServer implements Runnable {
 		}
 	}
 
-	private void depositCheque() {
+	private void depositCheque() throws IOException {
 
 		String depositResult = "";
 		// read cheque from socket
@@ -244,7 +244,7 @@ public class EchequeServer implements Runnable {
 		}
 	}
 
-	private void cancelCheque() {
+	private void cancelCheque() throws IOException {
 		ECheque recivedCehq = null;
 		try {
 			recivedCehq = (ECheque) socketInputObject.readObject();

@@ -9,12 +9,16 @@
 
 package eCheque;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.util.Properties;
 /**
  * 
  * @author Saad
@@ -22,8 +26,10 @@ import java.sql.Statement;
 
 public class EChequeDB {
 
-	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	private static final String DATABASE_URL = "jdbc:mysql://db2.seng.uvic.ca/ebank";
+	private static final String DATABASE_CONFIG_FILE = "databaseconfig.properties";
+	
+	private String jdbc_driver;
+	private String database_url;
 	private String userName;
 	private String password;
 	private Connection connection = null;
@@ -31,19 +37,25 @@ public class EChequeDB {
 	private DatabaseMode databaseMode;
 	private ResultSet resultSet;
 
-	/** Creates a new instance of EChequeDB */
-	public EChequeDB() {
-		userName = "marcelob";
-		password = "*X4r,jxT";
-
+	/** Creates a new instance of EChequeDB 
+	 * @throws IOException */
+	public EChequeDB() throws IOException {
+		InputStream input = new FileInputStream(new File(DATABASE_CONFIG_FILE));
+		Properties props = new Properties();
+		props.load(input);
+		
+		jdbc_driver = props.getProperty("JDBC_DRIVER");
+		database_url = props.getProperty("DATABASE_URL");
+		userName = props.getProperty("USERNAME");
+		password = props.getProperty("PASSWORD");
 	}
 
 	private boolean connectToDataBase() throws ClassNotFoundException,
 			SQLException {
 		// Initialize Connection to DB:
-		Class.forName(JDBC_DRIVER); // load database driver class
+		Class.forName(jdbc_driver); // load database driver class
 		// establish connection to database
-		connection = DriverManager.getConnection(DATABASE_URL, userName,
+		connection = DriverManager.getConnection(database_url, userName,
 				password);
 		return true;
 	}
