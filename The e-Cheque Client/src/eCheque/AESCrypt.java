@@ -48,8 +48,10 @@ import java.io.*;
                 
                 if(mode == 0 || mode == 1)
                   cipherObj = Cipher.getInstance("AES");
+                else if(mode==2)
+                  cipherObj =Cipher.getInstance("AESWrap");
                 else
-                  cipherObj =Cipher.getInstance("RSA");
+                  cipherObj =Cipher.getInstance("AESWrap");
                 
                 cipherObj.init(CipherMode,key);
 
