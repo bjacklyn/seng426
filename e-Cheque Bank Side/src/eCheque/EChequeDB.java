@@ -101,7 +101,7 @@ public class EChequeDB {
 		} finally {
 			closeDataBaseConnection();
 		}
-		
+
 		return flag;
 	}
 
@@ -141,7 +141,7 @@ public class EChequeDB {
 		} finally {
 			closeDataBaseConnection();
 		}
-		
+
 		return flag;
 	}
 
@@ -179,7 +179,7 @@ public class EChequeDB {
 		} finally {
 			closeDataBaseConnection();
 		}
-		
+
 		return flag;
 	}
 }
