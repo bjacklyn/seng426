@@ -19,6 +19,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 /**
  * 
  * @author Saad
@@ -103,9 +105,12 @@ public class EChequeDB {
 			flag = true;
 		} catch (ClassNotFoundException exp) {
 			exp.printStackTrace();
-
+		} catch (MySQLIntegrityConstraintViolationException exp)
+		{
+			return false;
 		} catch (SQLException exp) {
 			exp.printStackTrace();
+			
 
 		} finally {
 			closeDataBaseConnection();
