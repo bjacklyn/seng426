@@ -11,19 +11,20 @@ package eCheque;
  * @author  Saad
  */
 //import com.Trendy.swing.plaf.TrendyLookAndFeel;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.security.spec.KeySpec;
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+
 import javax.crypto.Cipher;
-import javax.swing.UIManager;
-import javax.swing.JOptionPane;
 import javax.swing.JFileChooser;
-import java.security.*;
-import java.io.File;
+import javax.swing.JOptionPane;
 
 public class RegistrationJFrame extends javax.swing.JFrame {
     
@@ -54,7 +55,7 @@ public class RegistrationJFrame extends javax.swing.JFrame {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
-        jPanel1 = new javax.swing.JPanel();
+    	jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jTBankName = new javax.swing.JTextField();
@@ -211,7 +212,6 @@ public class RegistrationJFrame extends javax.swing.JFrame {
         });
 
         jLabel11.setText("re-Password");
-
         org.jdesktop.layout.GroupLayout jPanel4Layout = new org.jdesktop.layout.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -304,6 +304,8 @@ public class RegistrationJFrame extends javax.swing.JFrame {
         );
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((screenSize.width-458)/2, (screenSize.height-482)/2, 458, 482);
+   
+        
     }// </editor-fold>//GEN-END:initComponents
     
     private String getWalletLoaction(String dialogTitle){
@@ -381,8 +383,19 @@ public class RegistrationJFrame extends javax.swing.JFrame {
                     
                     if(clientName.length()!=0){
                         
-                            if(accountNumber.length()!=0){
-                                
+                    	// Sanitize the account number 
+                    	boolean validAccount = true;
+                    	int accountNum = 0;
+                    	try {
+                    		accountNum = Integer.valueOf(accountNumber);
+                    	}
+                    	catch(NumberFormatException nfe)
+                    	{
+                    		validAccount = false;
+                    	}
+                    	
+                            if(accountNum > 0 &&  validAccount){
+                            	
                                 if(digitalCIssuer.length()!=0){
                                     
                                     if(digitalCURL.length()!=0){
@@ -512,7 +525,7 @@ public class RegistrationJFrame extends javax.swing.JFrame {
                                }
                             }
                             else{
-                                JOptionPane.showMessageDialog(null,"Account number can not be empty", "User Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null,"Account number must be a positive integer value", "User Error", JOptionPane.ERROR_MESSAGE);
        
                             }
                     }
