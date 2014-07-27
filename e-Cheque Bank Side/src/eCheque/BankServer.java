@@ -22,7 +22,7 @@ public class BankServer implements Runnable {
 
 	/** Creates a new instance of BankSever */
 	public BankServer() throws IOException {
-		serverSocket = new ServerSocket(8189);
+		serverSocket = new ServerSocket(EChequeUtil.SERVER_PORT);
 	}
 
 	public void run() {

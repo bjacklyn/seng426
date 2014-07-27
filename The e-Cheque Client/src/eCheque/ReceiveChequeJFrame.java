@@ -187,7 +187,7 @@ public class ReceiveChequeJFrame extends javax.swing.JFrame {
             
             //Initialize the server connection.
             if(!serverStartFlage){
-                serverSocket = new ServerSocket(8189);
+                serverSocket = new ServerSocket(EChequeUtil.CLIENT_PORT);
                 serverStartFlage = true;
                 
                 if(jCheckBox1.isSelected())
