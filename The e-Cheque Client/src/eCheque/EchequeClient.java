@@ -44,13 +44,14 @@ private String walletPath;
 private String hostname;
 private int portID;
 private int bankmode;
+private int timeout;
 private boolean getServerConnection;
 private boolean getSocketConnection;
 private boolean getProcessConnection;
 private boolean bankConnection;
 
 
-public EchequeClient(JTextArea screen , DigitalCertificate DC,Key aesKey,String wPath, String cPath, String host, int port){
+public EchequeClient(JTextArea screen , DigitalCertificate DC,Key aesKey,String wPath, String cPath, String host, int port, int timeout){
 
     screenShell = screen;
     clientCerit = DC;
@@ -59,6 +60,7 @@ public EchequeClient(JTextArea screen , DigitalCertificate DC,Key aesKey,String 
     chequePath = cPath;
     hostname = host;
     portID = port;
+    this.timeout = timeout;
     getServerConnection = false;
     getSocketConnection = false;
     getProcessConnection= false;
@@ -86,9 +88,10 @@ public EchequeClient(int port, int mode, String host,EChequeRegisteration regist
 }     
 
 private void ConnectToServer( ) throws Exception {
-    
-      ClientConnection = new Socket(InetAddress.getByName(hostname),portID);
-      getServerConnection = true;
+	
+	 ClientConnection = new Socket();
+	 ClientConnection.connect(new InetSocketAddress(InetAddress.getByName(hostname),portID), timeout);
+	 getServerConnection = true;
 }
 
 private void getSocketStream()throws Exception {

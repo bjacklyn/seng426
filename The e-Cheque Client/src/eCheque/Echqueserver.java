@@ -54,8 +54,17 @@ private PrivateKey privKey;
    // server = new ServerSocket(portID);
 //}
 
- private void acceptConnection()throws IOException{
-     ServerConnection = server.accept();
+ private boolean acceptConnection()throws IOException{
+     try {
+    	 ServerConnection = server.accept();
+    	 Thread.sleep(15000);
+     }
+     catch(SocketTimeoutException ste)
+     {
+    	 return true;
+     }
+     catch(InterruptedException i){}
+	 return false;
 } 
 
  private void getsocketStream()throws Exception {
@@ -170,12 +179,20 @@ private PrivateKey privKey;
  }
  
  public void RunServer() {
-    try {
+    
+	 boolean timeout = false;
+	 
+	 try {
           
            screenShell.append("\n>>Status: Starting The Sever");
            //startServer(); 
            screenShell.append("\n>>Status: Wating for connection");
-           acceptConnection();
+           timeout = acceptConnection();
+           if(timeout)
+           {
+        	   screenShell.append("\n>>Status: Timed out. Please try again");
+        	   return;
+           }
            screenShell.append("\n>>Status: connection accepted");
            getsocketStream ();
            screenShell.append("\n>>Status: Socket I/O complete");
@@ -192,7 +209,10 @@ private PrivateKey privKey;
      
     finally
     {
-          closeConnection();
+    	if(!timeout)
+    	{
+    		closeConnection();
+    	}
     }
 }
 

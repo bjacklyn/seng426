@@ -26,6 +26,7 @@ import java.security.*;
 
 public class SendChequeJFrame extends javax.swing.JFrame {
     
+	private static final int TIMEOUT = 10000;
     private String chequePath;
     private String recieverIP;
     private String cipherChequePath;
@@ -273,10 +274,16 @@ public class SendChequeJFrame extends javax.swing.JFrame {
                             DigitalCertificateIO readClientDC = new DigitalCertificateIO();
                             clientDC = readClientDC.readDigitalCertificate(eChequeRegisterdUser.getEWalletLoaction()+File.separator+"Security Tools"+File.separator+eChequeRegisterdUser.getClientName()+"DigCert.edc");
 
-                            JOptionPane.showMessageDialog(null,"Strating client");
+                            int timeout = 0;
+                            if(jCheckBox1.isSelected())
+                            {
+                            	timeout = TIMEOUT;
+                            }
+                            
+                            JOptionPane.showMessageDialog(null,"Starting client");
                             //Start Server Thread.
                             Runnable threadingClient= new EchequeClient(jTShellWindow,clientDC,sessionKey,eChequeRegisterdUser.getEWalletLoaction(),
-                                    chequePath,hostName,8189);
+                                    chequePath,hostName,8189, timeout);
                             Thread  client = new Thread(threadingClient);
                             client.start();
 
