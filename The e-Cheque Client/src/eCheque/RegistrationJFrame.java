@@ -483,7 +483,7 @@ public class RegistrationJFrame extends javax.swing.JFrame {
                                                             DigitalCertificateIO.saveDC(dcObj,eWalletPath+File.separator+"Security Tools"+File.separator+registerationObj.getClientName()+"DigCert.edc");
                                                             
                                                             //Connect to the bank server to activate the e-cheque account.
-                                                            Runnable client = new EchequeClient(8189,BankMode.REGISTER,registerationObj.getBankAddress(),registerationObj,
+                                                            Runnable client = new EchequeClient(EChequeUtil.SERVER_PORT,BankMode.REGISTER,registerationObj.getBankAddress(),registerationObj,
                                                                     dcObj);
                                                             Thread t = new Thread(client);
                                                             t.start();
