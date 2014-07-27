@@ -62,7 +62,6 @@ public class EchequeServer implements Runnable {
 				cancelCheque();
 			}
 		}
-
 	}
 
 	private void registerClientInfo() throws IOException,

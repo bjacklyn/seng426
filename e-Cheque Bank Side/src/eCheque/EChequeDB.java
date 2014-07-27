@@ -15,8 +15,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.swing.JOptionPane;
-
 /**
  * 
  * @author Saad
@@ -71,15 +69,14 @@ public class EChequeDB {
 	private void executeSQLStatment(String statment, int statType)
 			throws SQLException {
 
-		// Initialize sql statment and excute it.
+		// Initialize sql statment and execute it.
 		if (statType == 0) {
 			resultSet = sqlStatement.executeQuery(statment);
-
 		}
+		
 		if (statType == 1) {
 			sqlStatement.executeUpdate(statment);
 		}
-
 	}
 
 	public boolean runDB(int mode, String databaseStat) {
@@ -111,12 +108,9 @@ public class EChequeDB {
 
 		try {
 			connectToDataBase();
-			JOptionPane.showMessageDialog(null,
-					"You are connected to e-Cheque Bank DB", "DB State",
-					JOptionPane.INFORMATION_MESSAGE);
+			System.out.println("You are connected to e-Cheque Bank DB");
 			createStatment();
-			JOptionPane.showMessageDialog(null, "You have created statment",
-					"DB State", JOptionPane.INFORMATION_MESSAGE);
+			System.out.println("You have created a statement");
 
 			// run the specific sql statment
 			executeSQLStatment(databaseStat, databaseMode);
@@ -129,13 +123,9 @@ public class EChequeDB {
 			}
 
 		} catch (ClassNotFoundException exp) {
-			JOptionPane.showMessageDialog(null, exp.getMessage(), "DB Error",
-					JOptionPane.ERROR_MESSAGE);
 			exp.printStackTrace();
 
 		} catch (SQLException exp) {
-			JOptionPane.showMessageDialog(null, exp.getMessage(), "DB Error",
-					JOptionPane.ERROR_MESSAGE);
 			exp.printStackTrace();
 
 		} finally {
@@ -151,12 +141,9 @@ public class EChequeDB {
 
 		try {
 			connectToDataBase();
-			JOptionPane.showMessageDialog(null,
-					"You are connected to e-Cheque Bank DB", "DB State",
-					JOptionPane.INFORMATION_MESSAGE);
+			System.out.println("You are connected to e-Cheque Bank DB");
 			createStatment();
-			JOptionPane.showMessageDialog(null, "You have created statment",
-					"DB State", JOptionPane.INFORMATION_MESSAGE);
+			System.out.println("You have created a statement");
 
 			// run the specific sql statment
 			executeSQLStatment(databaseStat, databaseMode);
@@ -167,13 +154,9 @@ public class EChequeDB {
 			}
 
 		} catch (ClassNotFoundException exp) {
-			JOptionPane.showMessageDialog(null, exp.getMessage(), "DB Error",
-					JOptionPane.ERROR_MESSAGE);
 			exp.printStackTrace();
 
 		} catch (SQLException exp) {
-			JOptionPane.showMessageDialog(null, exp.getMessage(), "DB Error",
-					JOptionPane.ERROR_MESSAGE);
 			exp.printStackTrace();
 
 		} finally {
