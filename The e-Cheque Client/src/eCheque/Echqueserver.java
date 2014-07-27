@@ -10,11 +10,11 @@
 /**
  *
  * @author Basel
- */ 
+ */
 package eCheque;
 
 import java.net.*;
-import java.io.* ;       
+import java.io.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.crypto.IllegalBlockSizeException;
@@ -24,210 +24,218 @@ import javax.swing.JTextArea;
 import javax.crypto.Cipher;
 import java.security.*;
 
-public class Echqueserver implements Runnable{
-    
-/** Creates a new instance of Echqueserver */
-private ServerSocket server;
-private Socket ServerConnection;
-private ObjectInputStream socketInputObject;
-private ObjectOutputStream socketOutputObject;
-private InputStream socketInput;
-private OutputStream socketOutput;
-private JTextArea screenShell;
-private EChequeRegisteration eChequeRegist;
-private DigitalCertificate serverCerit;
-private String walletPath;
-private int portID;
-private PrivateKey privKey;
+public class Echqueserver implements Runnable {
 
- public Echqueserver(JTextArea screen,DigitalCertificate DC, String wPath,PrivateKey privateKey, ServerSocket serverSockect){
+	/** Creates a new instance of Echqueserver */
+	private ServerSocket server;
+	private Socket ServerConnection;
+	private ObjectInputStream socketInputObject;
+	private ObjectOutputStream socketOutputObject;
+	private InputStream socketInput;
+	private OutputStream socketOutput;
+	private JTextArea screenShell;
+	private EChequeRegisteration eChequeRegist;
+	private DigitalCertificate serverCerit;
+	private String walletPath;
+	private int portID;
+	private PrivateKey privKey;
 
-    screenShell = screen;
-    serverCerit = DC;
-    walletPath = wPath;
-    privKey = privateKey;
-    server = serverSockect;
-}
+	public Echqueserver(JTextArea screen, DigitalCertificate DC, String wPath,
+			PrivateKey privateKey, ServerSocket serverSockect) {
 
- //private void startServer() throws Exception{
-    
-   // server = new ServerSocket(portID);
-//}
+		screenShell = screen;
+		serverCerit = DC;
+		walletPath = wPath;
+		privKey = privateKey;
+		server = serverSockect;
+	}
 
- private boolean acceptConnection()throws IOException{
-     try {
-    	 ServerConnection = server.accept();
-    	 Thread.sleep(15000);
-     }
-     catch(SocketTimeoutException ste)
-     {
-    	 return true;
-     }
-     catch(InterruptedException i){}
-	 return false;
-} 
+	// private void startServer() throws Exception{
 
- private void getsocketStream()throws Exception {
-    socketOutput=ServerConnection.getOutputStream();
-    socketOutput.flush(); 
-    socketInput=ServerConnection.getInputStream() ;
+	// server = new ServerSocket(portID);
+	// }
 
-    socketOutputObject=new ObjectOutputStream(ServerConnection.getOutputStream());
-    socketOutputObject.flush();
-    socketInputObject = new ObjectInputStream(ServerConnection.getInputStream());
-   }
+	 private boolean acceptConnection()throws IOException{
+	     try {
+	    	 ServerConnection = server.accept();
+	    	 Thread.sleep(15000);
+	     }
+	     catch(SocketTimeoutException ste)
+	     {
+	    	 return true;
+	     }
+	     catch(InterruptedException i){}
+		 return false;
+	} 
 
- private void ProcessConnection()throws IOException,ClassNotFoundException,NoSuchAlgorithmException,NoSuchPaddingException, IllegalBlockSizeException,InvalidKeyException,Exception {
-       
-        boolean sessionDone = false;
-        DigitalCertificate clientCerit;
-        
-        if(!sessionDone){
-            
-            //exchange digital certificates
-            clientCerit = (DigitalCertificate)socketInputObject.readObject();
-            socketOutputObject.writeObject(serverCerit);
-            socketOutputObject.flush();
-            
-            //get the wraeped key and uwraped it
-            byte[] wrappedKey;
-            byte[] unwrappedKey;
-            Key sessionKey;
-            int keyLength; 
-            
-            //read the session key form the socket
-            keyLength = socketInputObject.readInt();
-            wrappedKey = new byte[keyLength];
-            socketInput.read(wrappedKey);
-            
-            //decrypt the session key with the user private key.
-            Cipher cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.UNWRAP_MODE,privKey);
-            sessionKey = cipher.unwrap(wrappedKey,"AES",Cipher.SECRET_KEY);
-            
-            //
-            Calendar currTime = new GregorianCalendar();
-            String cheqName ="";
-            cheqName += currTime.get(currTime.YEAR);
-            cheqName += currTime.get(currTime.MONTH);
-            cheqName += currTime.get(currTime.DAY_OF_MONTH);
-            cheqName += currTime.get(currTime.HOUR_OF_DAY);
-            cheqName += currTime.get(currTime.MILLISECOND);
-                                 
-            //read the cheque from the socket
-            FileOutputStream chqIn = new FileOutputStream(walletPath + File.separator +"In Coming" + File.separator +cheqName+".cry");
-            byte[] buffer = new byte[1024];
-            int numread;
-            while ((numread = socketInput.read(buffer))>=0)
-            {
-               chqIn.write(buffer, 0, numread);
-            }
-            
-            chqIn.close(); 
-        
-            //validate the received cheque.
-            InputStream in = new FileInputStream(walletPath+ File.separator +"In Coming" + File.separator +cheqName+".cry");
-            OutputStream out = new FileOutputStream(walletPath+ File.separator + "My Cheques" + File.separator +cheqName+".sec");
-            
-            //create AES object to decrypt the received cheque
-            AESCrypt aesObj = new AESCrypt();
-            Cipher aesCipher = aesObj.initializeCipher(sessionKey,1);
-            aesObj.crypt(in,out,aesCipher);
-            in.close();
-            out.close();
-           
-            // verify the cheque siganture using the sender public key.
-            Digitalsigneture digitalSign = new Digitalsigneture();
-            
-            // load decrypted chequeObject.
-            EChequeIO readChq = new EChequeIO();
-            ECheque recivedChq = new ECheque();
-            recivedChq = readChq.readcheque(walletPath+ File.separator +"My Cheques" + File.separator +cheqName+".sec");
-            String chqSign = ChequeReferenceString(recivedChq);
-            
-            boolean verifySign = digitalSign.verifySignature(recivedChq.getdrawersiganure(),chqSign,clientCerit.getpublicKey());
-            if(verifySign){
-                  JOptionPane.showMessageDialog(null,"The signature is vaild", "e-Cheque Clear",
-                  JOptionPane.INFORMATION_MESSAGE);
-            }
-            else{
-                  JOptionPane.showMessageDialog(null,"The signature is not vaild", "e-Cheque not Clear",
-                  JOptionPane.WARNING_MESSAGE);
-            }
-                
-           
-        }
-        
-}
-       
- private void closeConnection() {
-    try
-    {
-    
-        socketInput.close();
-        socketOutput.close();
-        socketInputObject.close();
-        socketOutputObject.close();
-        ServerConnection.close();
-    }
-    catch(Exception e)
-    {
-        JOptionPane.showMessageDialog(null,e.getMessage());
-        e.printStackTrace();
-    }
-     
- }
- 
- public void RunServer() {
-    
-	 boolean timeout = false;
-	 
-	 try {
-          
-           screenShell.append("\n>>Status: Starting The Sever");
-           //startServer(); 
-           screenShell.append("\n>>Status: Wating for connection");
-           timeout = acceptConnection();
-           if(timeout)
-           {
-        	   screenShell.append("\n>>Status: Timed out. Please try again");
-        	   return;
-           }
-           screenShell.append("\n>>Status: connection accepted");
-           getsocketStream ();
-           screenShell.append("\n>>Status: Socket I/O complete");
-           screenShell.append("\n>>Status: processing started");
-           ProcessConnection ();
-           screenShell.append("\n>>Status: process complete");
-        }
+	private void getsocketStream() throws Exception {
+		socketOutput = ServerConnection.getOutputStream();
+		socketOutput.flush();
+		socketInput = ServerConnection.getInputStream();
 
-    catch(Exception error)
-    {
-        JOptionPane.showMessageDialog(null,error.getMessage());
-        error.printStackTrace();
-    }
-     
-    finally
-    {
-    	if(!timeout)
-    	{
-    		closeConnection();
-    	}
-    }
-}
+		socketOutputObject = new ObjectOutputStream(
+				ServerConnection.getOutputStream());
+		socketOutputObject.flush();
+		socketInputObject = new ObjectInputStream(
+				ServerConnection.getInputStream());
+	}
 
- private String ChequeReferenceString(ECheque chq){
-        
-        String ref="";
-        ref+= chq.getaccountNumber()+chq.getaccountholder()+chq.getbankname()+chq.getchequeNumber()+
-              chq.getMoney()+chq.getcurrencytype()+chq.getearnday()+chq.getguaranteed()+chq.getpayToOrderOf();
-       
-        return ref;       
-}  
-    
- public void run(){
+	private void ProcessConnection() throws IOException,
+			ClassNotFoundException, NoSuchAlgorithmException,
+			NoSuchPaddingException, IllegalBlockSizeException,
+			InvalidKeyException, Exception {
 
-     RunServer();
- }
+		boolean sessionDone = false;
+		DigitalCertificate clientCerit;
+
+		if (!sessionDone) {
+
+			// exchange digital certificates
+			clientCerit = (DigitalCertificate) socketInputObject.readObject();
+			socketOutputObject.writeObject(serverCerit);
+			socketOutputObject.flush();
+
+			// get the wraeped key and uwraped it
+			byte[] wrappedKey;
+			byte[] unwrappedKey;
+			Key sessionKey;
+			int keyLength;
+
+			// read the session key form the socket
+			keyLength = socketInputObject.readInt();
+			wrappedKey = new byte[keyLength];
+			socketInput.read(wrappedKey);
+
+			// decrypt the session key with the user private key.
+			Cipher cipher = Cipher.getInstance("RSA");
+			cipher.init(Cipher.UNWRAP_MODE, privKey);
+			sessionKey = cipher.unwrap(wrappedKey, "AES", Cipher.SECRET_KEY);
+
+			//
+			Calendar currTime = new GregorianCalendar();
+			String cheqName = "";
+			cheqName += currTime.get(currTime.YEAR);
+			cheqName += currTime.get(currTime.MONTH);
+			cheqName += currTime.get(currTime.DAY_OF_MONTH);
+			cheqName += currTime.get(currTime.HOUR_OF_DAY);
+			cheqName += currTime.get(currTime.MILLISECOND);
+
+			// read the cheque from the socket
+			FileOutputStream chqIn = new FileOutputStream(walletPath
+					+ File.separator + "In Coming" + File.separator + cheqName
+					+ ".cry");
+			byte[] buffer = new byte[1024];
+			int numread;
+			while ((numread = socketInput.read(buffer)) >= 0) {
+				chqIn.write(buffer, 0, numread);
+			}
+
+			chqIn.close();
+
+			// validate the received cheque.
+			InputStream in = new FileInputStream(walletPath + File.separator
+					+ "In Coming" + File.separator + cheqName + ".cry");
+			OutputStream out = new FileOutputStream(walletPath + File.separator
+					+ "My Cheques" + File.separator + cheqName + ".sec");
+
+			// create AES object to decrypt the received cheque
+			AESCrypt aesObj = new AESCrypt();
+			Cipher aesCipher = aesObj.initializeCipher(sessionKey, 1);
+			aesObj.crypt(in, out, aesCipher);
+			in.close();
+			out.close();
+
+			// verify the cheque siganture using the sender public key.
+			DigitalSignature digitalSign = new DigitalSignature();
+
+			// load decrypted chequeObject.
+			EChequeIO readChq = new EChequeIO();
+			ECheque recivedChq = new ECheque();
+			recivedChq = readChq.readcheque(walletPath + File.separator
+					+ "My Cheques" + File.separator + cheqName + ".sec");
+			String chqSign = ChequeReferenceString(recivedChq);
+
+			boolean verifySign = digitalSign.verifySignature(
+					recivedChq.getdrawersiganure(), chqSign,
+					clientCerit.getpublicKey());
+			if (verifySign) {
+				JOptionPane.showMessageDialog(null, "The signature is vaild",
+						"e-Cheque Clear", JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"The signature is not vaild", "e-Cheque not Clear",
+						JOptionPane.WARNING_MESSAGE);
+			}
+
+		}
+
+	}
+
+	private void closeConnection() {
+		try {
+
+			socketInput.close();
+			socketOutput.close();
+			socketInputObject.close();
+			socketOutputObject.close();
+			ServerConnection.close();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	public void RunServer() {
+		
+		boolean timeout = false;
+		
+		try {
+
+			screenShell.append("\n>>Status: Starting The Sever");
+			// startServer();
+			screenShell.append("\n>>Status: Wating for connection");
+			timeout = acceptConnection();
+	        if(timeout)
+	        {
+	        	 screenShell.append("\n>>Status: Timed out. Please try again");
+	        	   return;
+	        }
+			screenShell.append("\n>>Status: connection accepted");
+			getsocketStream();
+			screenShell.append("\n>>Status: Socket I/O complete");
+			screenShell.append("\n>>Status: processing started");
+			ProcessConnection();
+			screenShell.append("\n>>Status: process complete");
+		}
+
+		catch (Exception error) {
+			JOptionPane.showMessageDialog(null, error.getMessage());
+			error.printStackTrace();
+		}
+
+		finally {
+			if(!timeout)
+	    	{
+	    		closeConnection();
+	    	}
+		}
+	}
+
+	private String ChequeReferenceString(ECheque chq) {
+
+		String ref = "";
+		ref += chq.getaccountNumber() + chq.getaccountholder()
+				+ chq.getbankname() + chq.getchequeNumber() + chq.getMoney()
+				+ chq.getcurrencytype() + chq.getearnday()
+				+ chq.getguaranteed() + chq.getpayToOrderOf();
+
+		return ref;
+	}
+
+	public void run() {
+
+		RunServer();
+	}
 
 }

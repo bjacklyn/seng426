@@ -48,11 +48,11 @@ public class EchequeServer implements Runnable {
 
 	private void processConnection() {
 		boolean sessionDone = false;
-		int code;
+		BankMode mode;
 		if (!sessionDone) {
 			try {
 				socketInputObject.readObject();
-				code = socketInputObject.readInt();
+				mode = (BankMode) socketInputObject.readObject();
 			} catch(IOException ioe) {
 				ioe.printStackTrace();
 				return;
@@ -60,13 +60,13 @@ public class EchequeServer implements Runnable {
 				cnfe.printStackTrace();
 				return;
 			}
-			if (code == 0) {
+			if (mode == BankMode.REGISTER) {
 				registerClientInfo();
 			}
-			if (code == 1) {
+			if (mode == BankMode.DEPOSIT) {
 				depositCheque();
 			}
-			if (code == 2) {
+			if (mode == BankMode.CANCEL) {
 				cancelCheque();
 			}
 		}
@@ -114,7 +114,7 @@ public class EchequeServer implements Runnable {
 
 			// starting database
 			EChequeDB chqDB = new EChequeDB();
-			chqDB.runDB(1, registerStat);
+			chqDB.runDB(DatabaseMode.UPDATE, registerStat);
 
 			try {
 				// store client digital certificate
@@ -170,7 +170,7 @@ public class EchequeServer implements Runnable {
 			double[] balanceValue = new double[1];
 	
 			EChequeDB chqDB = new EChequeDB();
-			if (chqDB.runDB(0, withdrawStat, balanceValue)) {
+			if (chqDB.runDB(DatabaseMode.QUERY, withdrawStat, balanceValue)) {
 				// check if the balance sufficient
 				double chequeMoney = Double.parseDouble(recivedCehq.getMoney());
 				if (chequeMoney <= balanceValue[0]) {
@@ -179,22 +179,22 @@ public class EchequeServer implements Runnable {
 							+ recivedCehq.getaccountNumber()
 							+ "'and chequeID ='"
 							+ recivedCehq.getchequeNumber() + "'";
-					if (!chqDB.runDB(withdrawStat, 0)) {
+					if (!chqDB.runDB(withdrawStat, DatabaseMode.QUERY)) {
 						withdrawStat = "Select * from eChequeOut where chequeID='"
 								+ recivedCehq.getchequeNumber()
 								+ "'and accountID='"
 								+ recivedCehq.getaccountNumber() + "'";
-						if (!chqDB.runDB(withdrawStat, 0)) {
+						if (!chqDB.runDB(withdrawStat, DatabaseMode.QUERY)) {
 							withdrawStat = "Update accounts set balance = balance -"
 									+ chequeMoney
 									+ "where accountID ="
 									+ recivedCehq.getaccountNumber();
-							chqDB.runDB(1, withdrawStat);
+							chqDB.runDB(DatabaseMode.UPDATE, withdrawStat);
 							withdrawStat = "Update accounts set balance = balance +"
 									+ chequeMoney
 									+ "where accountID ="
 									+ depositAccount;
-							chqDB.runDB(1, withdrawStat);
+							chqDB.runDB(DatabaseMode.UPDATE, withdrawStat);
 	
 							// update cheque out and in table
 							cheqUpdate = "Insert into eChequeOut(chequeID, accountID, balance) values("
@@ -204,7 +204,7 @@ public class EchequeServer implements Runnable {
 									+ recivedCehq.getaccountNumber()
 									+ "',"
 									+ chequeMoney + ")";
-							chqDB.runDB(1, cheqUpdate);
+							chqDB.runDB(DatabaseMode.UPDATE, cheqUpdate);
 	
 							cheqUpdate = "Insert into eChequeIN(chequeID, accountID, balance) values("
 									+ "'"
@@ -213,7 +213,7 @@ public class EchequeServer implements Runnable {
 									+ recivedCehq.getaccountNumber()
 									+ "',"
 									+ chequeMoney + ")";
-							chqDB.runDB(1, cheqUpdate);
+							chqDB.runDB(DatabaseMode.UPDATE, cheqUpdate);
 	
 							// report the deposit result
 							depositResult = "Your account recieves the deposit cheque\nyour balance incremented by"
@@ -267,7 +267,7 @@ public class EchequeServer implements Runnable {
 		EChequeDB chqDB = new EChequeDB();
 		
 		try {
-			if (chqDB.runDB(1, cancelChequeStat)) {
+			if (chqDB.runDB(DatabaseMode.UPDATE, cancelChequeStat)) {
 				socketOutputObject.writeObject("cheque cancelled done");
 				socketOutputObject.flush();
 
