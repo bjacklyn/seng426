@@ -1,15 +1,13 @@
 package eCheque;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.security.KeyPair;
 import java.security.Signature;
 import java.util.Arrays;
 
 import org.junit.Test;
-
-import eCheque.Digitalsigneture;
-import eCheque.RSAGenerator;
 
 public class DigitalsignetureTest {
 
@@ -25,8 +23,8 @@ public class DigitalsignetureTest {
         signmessage.update(message.getBytes());
         byte[] expectedSignature = signmessage.sign();
         
-        Digitalsigneture ds = new Digitalsigneture();
-        byte[] actualSignature = ds.signeture(message, RSAKeys.getPrivate());
+        DigitalSignature ds = new DigitalSignature();
+        byte[] actualSignature = ds.sign(message, RSAKeys.getPrivate());
         
         assertTrue(Arrays.equals(expectedSignature, actualSignature));
 	}
@@ -43,7 +41,7 @@ public class DigitalsignetureTest {
         signmessage.update(message.getBytes());
         byte[] signature = signmessage.sign();
         
-        Digitalsigneture ds = new Digitalsigneture();
+        DigitalSignature ds = new DigitalSignature();
         
         assertTrue(ds.verifySignature(signature, message, RSAKeys.getPublic()));
 	}
@@ -61,7 +59,7 @@ public class DigitalsignetureTest {
         signmessage.update(wrongMessage.getBytes());
         byte[] signature = signmessage.sign();
         
-        Digitalsigneture ds = new Digitalsigneture();
+        DigitalSignature ds = new DigitalSignature();
         
         assertFalse(ds.verifySignature(signature, message, RSAKeys.getPublic()));
 	}
