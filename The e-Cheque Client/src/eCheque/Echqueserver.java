@@ -58,7 +58,6 @@ public class Echqueserver implements Runnable {
 	 private boolean acceptConnection()throws IOException{
 	     try {
 	    	 ServerConnection = server.accept();
-	    	 
 	     }
 	     catch(SocketTimeoutException ste)
 	     {
