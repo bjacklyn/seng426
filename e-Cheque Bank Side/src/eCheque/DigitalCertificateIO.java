@@ -29,6 +29,5 @@ public class DigitalCertificateIO {
 
 		In.close();
 		return DC;
-
 	}
 }
