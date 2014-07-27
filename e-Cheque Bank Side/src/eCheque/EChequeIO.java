@@ -1,5 +1,5 @@
 /*
- * savecheque.java
+ * EChequeIO.java
  *
  * Created on March 4, 2007, 9:44 PM
  *
@@ -21,14 +21,13 @@ import java.io.ObjectOutputStream;
  */
 public class EChequeIO {
 
-	public void savecheque(ECheque obj, String filename)// (ECheque x,String
-														// filebath)
+	public void savecheque(ECheque obj, String filename)
 			throws IOException {
 
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(
-				new File(filename)));// new File(filename))
+				new File(filename)));
 
-		out.writeObject(obj);// (xj);
+		out.writeObject(obj);
 
 		out.close();
 
@@ -38,7 +37,7 @@ public class EChequeIO {
 			ClassNotFoundException {
 
 		ObjectInputStream in = new ObjectInputStream(new FileInputStream(
-				new File(filename)));// new File(filename))
+				new File(filename)));
 		ECheque cheq;
 
 		cheq = (ECheque) in.readObject();

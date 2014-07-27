@@ -97,5 +97,4 @@ public class DigitalCertificate implements Serializable {
 	public byte[] getIssuerSignature() {
 		return IssuerSignature;
 	}
-
 }

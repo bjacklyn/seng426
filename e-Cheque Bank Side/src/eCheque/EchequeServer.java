@@ -46,12 +46,20 @@ public class EchequeServer implements Runnable {
 				ServerConnection.getInputStream());
 	}
 
-	private void processConnection() throws IOException, ClassNotFoundException {
+	private void processConnection() {
 		boolean sessionDone = false;
 		int code;
 		if (!sessionDone) {
-			socketInputObject.readObject();
-			code = socketInputObject.readInt();
+			try {
+				socketInputObject.readObject();
+				code = socketInputObject.readInt();
+			} catch(IOException ioe) {
+				ioe.printStackTrace();
+				return;
+			} catch(ClassNotFoundException cnfe) {
+				cnfe.printStackTrace();
+				return;
+			}
 			if (code == 0) {
 				registerClientInfo();
 			}
@@ -62,136 +70,213 @@ public class EchequeServer implements Runnable {
 				cancelCheque();
 			}
 		}
-
 	}
 
-	private void registerClientInfo() throws IOException,
-			ClassNotFoundException {
-		EChequeRegisteration registerClient;
-		registerClient = (EChequeRegisteration) socketInputObject.readObject();
-		// get user account ID
-		String accountID = "'" + registerClient.getAccountNumber() + "',";
-		String cerit = "'" + registerClient.getClientName() + "DC.edc" + "',";
-		String clientName = "'" + registerClient.getClientName() + "',";
+	private void registerClientInfo() {
+		EChequeRegisteration registerClient = null;
+		try {
+			registerClient = (EChequeRegisteration) socketInputObject
+					.readObject();
 
-		DigitalCertificate registDC = (DigitalCertificate) socketInputObject
-				.readObject();
+		} catch (IOException ioe) {
+			System.err
+					.println("IOException while reading EChequeRegistration from socket");
+			ioe.printStackTrace();
+		} catch (ClassNotFoundException cnfe) {
+			System.err
+					.println("ClassNotFoundException while reading EChequeRegistration from socket");
+			cnfe.printStackTrace();
+		}
 
-		String registerStat = "insert into accounts(accountID,clientName,dcPath,balance) values("
-				+ accountID + clientName + cerit + 100000 + ")";
+		DigitalCertificate registDC = null;
+		try {
+			registDC = (DigitalCertificate) socketInputObject.readObject();
 
-		// starting database
-		EChequeDB chqDB = new EChequeDB();
-		chqDB.runDB(1, registerStat);
+		} catch (IOException ioe) {
+			System.err
+					.println("IOException while reading EChequeRegistration from socket");
+			ioe.printStackTrace();
+		} catch (ClassNotFoundException cnfe) {
+			System.err
+					.println("ClassNotFoundException while reading EChequeRegistration from socket");
+			cnfe.printStackTrace();
+		}
 
-		// store client digital certificate
-		DigitalCertificateIO dcIO = new DigitalCertificateIO();
-		dcIO.SaveDC(registDC,
-				"Bank" + File.separator + registerClient.getClientName()
-						+ "DC.edc");
+		if (registerClient != null && registDC != null) {
+			// get user account ID
+			String accountID = "'" + registerClient.getAccountNumber() + "',";
+			String cerit = "'" + registerClient.getClientName() + "DC.edc"
+					+ "',";
+			String clientName = "'" + registerClient.getClientName() + "',";
 
-		socketOutputObject.writeObject("registeration complete");
-		socketOutputObject.flush();
+			String registerStat = "insert into accounts(accountID,clientName,dcPath,balance) values("
+					+ accountID + clientName + cerit + 100000 + ")";
+
+			// starting database
+			EChequeDB chqDB = new EChequeDB();
+			chqDB.runDB(1, registerStat);
+
+			try {
+				// store client digital certificate
+				DigitalCertificateIO.saveDC(registDC, "Bank" + File.separator
+						+ registerClient.getClientName() + "DC.edc");
+				socketOutputObject.writeObject("registeration complete");
+				socketOutputObject.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
-	private void depositCheque() throws IOException, ClassNotFoundException {
+	private void depositCheque() {
 
 		String depositResult = "";
 		// read cheque from socket
-		ECheque recivedCehq = (ECheque) socketInputObject.readObject();
+		ECheque recivedCehq = null;
+		try {
+			recivedCehq = (ECheque) socketInputObject.readObject();
+
+		} catch (IOException ioe) {
+			System.err
+					.println("IOException while reading ECheque from socket");
+			ioe.printStackTrace();
+		} catch (ClassNotFoundException cnfe) {
+			System.err
+					.println("ClassNotFoundException while reading ECheque from socket");
+			cnfe.printStackTrace();
+		}
+		
 		// read deposit Account number.
-		String depositAccount = (String) socketInputObject.readObject();
+		String depositAccount = null;
+		try {
+			depositAccount = (String) socketInputObject.readObject();
 
-		// check the withdraw account.
-		String withdrawStat = "Select balance from accounts where accountID ="
-				+ recivedCehq.getaccountNumber();
-		String cheqUpdate = "";
-		double[] balanceValue = new double[1];
-
-		EChequeDB chqDB = new EChequeDB();
-		if (chqDB.runDB(0, withdrawStat, balanceValue)) {
-			// check if the balance sufficient
-			double chequeMoney = Double.parseDouble(recivedCehq.getMoney());
-			if (chequeMoney <= balanceValue[0]) {
-				// cheque that the cheque is not canceld
-				withdrawStat = "Select * from cancelledCheque where accountID ='"
-						+ recivedCehq.getaccountNumber()
-						+ "'and chequeID ='"
-						+ recivedCehq.getchequeNumber() + "'";
-				if (!chqDB.runDB(withdrawStat, 0)) {
-					withdrawStat = "Select * from eChequeOut where chequeID='"
-							+ recivedCehq.getchequeNumber()
-							+ "'and accountID='"
-							+ recivedCehq.getaccountNumber() + "'";
+		} catch (IOException ioe) {
+			System.err
+					.println("IOException while reading Deposit Account from socket");
+			ioe.printStackTrace();
+		} catch (ClassNotFoundException cnfe) {
+			System.err
+					.println("ClassNotFoundException while reading Deposit Account from socket");
+			cnfe.printStackTrace();
+		}
+		
+		if (recivedCehq != null && depositAccount != null) {
+	
+			// check the withdraw account.
+			String withdrawStat = "Select balance from accounts where accountID ="
+					+ recivedCehq.getaccountNumber();
+			String cheqUpdate = "";
+			double[] balanceValue = new double[1];
+	
+			EChequeDB chqDB = new EChequeDB();
+			if (chqDB.runDB(0, withdrawStat, balanceValue)) {
+				// check if the balance sufficient
+				double chequeMoney = Double.parseDouble(recivedCehq.getMoney());
+				if (chequeMoney <= balanceValue[0]) {
+					// cheque that the cheque is not canceld
+					withdrawStat = "Select * from cancelledCheque where accountID ='"
+							+ recivedCehq.getaccountNumber()
+							+ "'and chequeID ='"
+							+ recivedCehq.getchequeNumber() + "'";
 					if (!chqDB.runDB(withdrawStat, 0)) {
-						withdrawStat = "Update accounts set balance = balance -"
-								+ chequeMoney
-								+ "where accountID ="
-								+ recivedCehq.getaccountNumber();
-						chqDB.runDB(1, withdrawStat);
-						withdrawStat = "Update accounts set balance = balance +"
-								+ chequeMoney
-								+ "where accountID ="
-								+ depositAccount;
-						chqDB.runDB(1, withdrawStat);
-
-						// update cheque out and in table
-						cheqUpdate = "Insert into eChequeOut(chequeID, accountID, balance) values("
-								+ "'"
+						withdrawStat = "Select * from eChequeOut where chequeID='"
 								+ recivedCehq.getchequeNumber()
-								+ "','"
-								+ recivedCehq.getaccountNumber()
-								+ "',"
-								+ chequeMoney + ")";
-						chqDB.runDB(1, cheqUpdate);
-
-						cheqUpdate = "Insert into eChequeIN(chequeID, accountID, balance) values("
-								+ "'"
-								+ recivedCehq.getchequeNumber()
-								+ "','"
-								+ recivedCehq.getaccountNumber()
-								+ "',"
-								+ chequeMoney + ")";
-						chqDB.runDB(1, cheqUpdate);
-
-						// report the deposit result
-						depositResult = "Your account recieves the deposit cheque\nyour balance incremented by"
-								+ recivedCehq.getMoney();
+								+ "'and accountID='"
+								+ recivedCehq.getaccountNumber() + "'";
+						if (!chqDB.runDB(withdrawStat, 0)) {
+							withdrawStat = "Update accounts set balance = balance -"
+									+ chequeMoney
+									+ "where accountID ="
+									+ recivedCehq.getaccountNumber();
+							chqDB.runDB(1, withdrawStat);
+							withdrawStat = "Update accounts set balance = balance +"
+									+ chequeMoney
+									+ "where accountID ="
+									+ depositAccount;
+							chqDB.runDB(1, withdrawStat);
+	
+							// update cheque out and in table
+							cheqUpdate = "Insert into eChequeOut(chequeID, accountID, balance) values("
+									+ "'"
+									+ recivedCehq.getchequeNumber()
+									+ "','"
+									+ recivedCehq.getaccountNumber()
+									+ "',"
+									+ chequeMoney + ")";
+							chqDB.runDB(1, cheqUpdate);
+	
+							cheqUpdate = "Insert into eChequeIN(chequeID, accountID, balance) values("
+									+ "'"
+									+ recivedCehq.getchequeNumber()
+									+ "','"
+									+ recivedCehq.getaccountNumber()
+									+ "',"
+									+ chequeMoney + ")";
+							chqDB.runDB(1, cheqUpdate);
+	
+							// report the deposit result
+							depositResult = "Your account recieves the deposit cheque\nyour balance incremented by"
+									+ recivedCehq.getMoney();
+						} else {
+							// report the deposit result
+							depositResult = "This cheque is already deposit, sorry we can not deposit it twice";
+	
+						}
 					} else {
 						// report the deposit result
-						depositResult = "This cheque is already deposit, sorry we can not deposit it twice";
-
+						depositResult = "This cheque is canceled by the drawer\nSorry we can not deposit it";
 					}
 				} else {
 					// report the deposit result
-					depositResult = "This cheque is canceled by the drawer\nSorry we can not deposit it";
+					depositResult = "Drawer Balance is not sufficient for withdrawing\n";
 				}
 			} else {
-				// report the deposit result
-				depositResult = "Drawer Balance is not sufficient for withdrawing\n";
+				depositResult = "This cheque is not belong to one of our customers\nyou have to connect to the drawer bank server";
 			}
-		} else {
-			depositResult = "This cheque is not belong to one of our customers\nyou have to connect to the drawer bank server";
+			
+			try {
+				socketOutputObject.writeObject(depositResult);
+				socketOutputObject.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		socketOutputObject.writeObject(depositResult);
-		socketOutputObject.flush();
 	}
 
-	private void cancelCheque() throws IOException, ClassNotFoundException {
-		ECheque recivedCehq = (ECheque) socketInputObject.readObject();
+	private void cancelCheque() {
+		ECheque recivedCehq = null;
+		try {
+			recivedCehq = (ECheque) socketInputObject.readObject();
+
+		} catch (IOException ioe) {
+			System.err
+					.println("IOException while reading ECheque from socket");
+			ioe.printStackTrace();
+		} catch (ClassNotFoundException cnfe) {
+			System.err
+					.println("ClassNotFoundException while reading ECheque from socket");
+			cnfe.printStackTrace();
+		}
+		
 		String cancelChequeStat;
 		cancelChequeStat = "insert into cancelledCheque (accountID,chequeID) values('"
 				+ recivedCehq.getaccountNumber()
 				+ "','"
 				+ recivedCehq.getchequeNumber() + "')";
 		EChequeDB chqDB = new EChequeDB();
-		if (chqDB.runDB(1, cancelChequeStat)) {
-			socketOutputObject.writeObject("cheque canceld done");
-			socketOutputObject.flush();
+		
+		try {
+			if (chqDB.runDB(1, cancelChequeStat)) {
+				socketOutputObject.writeObject("cheque cancelled done");
+				socketOutputObject.flush();
 
-		} else {
-			socketOutputObject.writeObject("sorry cheque not canceled");
-			socketOutputObject.flush();
+			} else {
+				socketOutputObject.writeObject("sorry cheque not cancelled");
+				socketOutputObject.flush();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -215,10 +300,6 @@ public class EchequeServer implements Runnable {
 
 		catch (IOException ioe) {
 			ioe.printStackTrace();
-		}
-
-		catch (ClassNotFoundException cnfe) {
-			cnfe.printStackTrace();
 		}
 
 		finally {

@@ -194,19 +194,16 @@ public class EChequeBankServer extends javax.swing.JFrame {
 
 	private void jBStartMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jBStartMouseClicked
 		if (!serverStartFlag) {
-			jTBankShell.append("\n\n>> Sever is going to start");
+			jTBankShell.append("\n\n>> Server is going to start");
 
 			try {
-
 				Runnable runBank = new BankServer();
 				bankServerTread = new Thread(runBank);
 				bankServerTread.start();
 				serverStartFlag = true;
-				jTBankShell.append("\n\n>> Sever started");
+				jTBankShell.append("\n\n>> Server started");
 			} catch (IOException exp) {
-
-				JOptionPane.showMessageDialog(null, exp.getMessage(),
-						"Network Error", JOptionPane.ERROR_MESSAGE);
+				jTBankShell.append("\n\n>> Network Error: " + exp.getMessage());
 			}
 
 		} else {

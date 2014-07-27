@@ -464,9 +464,8 @@ public class RegistrationJFrame extends javax.swing.JFrame {
                                                             dcObj.setPublicKey(RSAKeys.getPublic());
                                                             
                                                             // save the user digital certificate
-                                                            DigitalCertificateIO dcIO = new DigitalCertificateIO();
-                                                            dcIO.SaveDC(dcObj,eWalletPath+File.separator+"Security Tools"+File.separator+registerationObj.getClientName()+"DigCert.edc");
-                                                                                                           
+                                                            DigitalCertificateIO.saveDC(dcObj,eWalletPath+File.separator+"Security Tools"+File.separator+registerationObj.getClientName()+"DigCert.edc");
+                                                            
                                                             //Connect to the bank server to activate the e-cheque account.
                                                             Runnable client = new EchequeClient(8189,0,registerationObj.getBankAddress(),registerationObj,
                                                                     dcObj);

@@ -89,7 +89,7 @@ public class AESCryptTest {
 		SecretKey key = aescTest.GenerateRandomAESKey();
 		
 		Cipher actualCipherObj = aescTest.initializeCipher(key, 2);
-		Cipher expectedCipherObj = Cipher.getInstance("RSA");
+		Cipher expectedCipherObj = Cipher.getInstance("AESWrap");
 		expectedCipherObj.init(Cipher.WRAP_MODE,key);
 		
 		assertEquals(expectedCipherObj.getAlgorithm(), actualCipherObj.getAlgorithm());
@@ -106,7 +106,7 @@ public class AESCryptTest {
 		SecretKey key = aescTest.GenerateRandomAESKey();
 		
 		Cipher actualCipherObj = aescTest.initializeCipher(key, 3);
-		Cipher expectedCipherObj = Cipher.getInstance("RSA");
+		Cipher expectedCipherObj = Cipher.getInstance("AESWrap");
 		expectedCipherObj.init(Cipher.UNWRAP_MODE, key);
 		
 		assertEquals(expectedCipherObj.getAlgorithm(), actualCipherObj.getAlgorithm());
@@ -123,7 +123,7 @@ public class AESCryptTest {
 		SecretKey key = aescTest.GenerateRandomAESKey();
 		
 		Cipher actualCipherObj = aescTest.initializeCipher(key, -1);
-		Cipher expectedCipherObj = Cipher.getInstance("RSA");
+		Cipher expectedCipherObj = Cipher.getInstance("AESWrap");
 		expectedCipherObj.init(Cipher.UNWRAP_MODE, key);
 		
 		assertEquals(expectedCipherObj.getAlgorithm(), actualCipherObj.getAlgorithm());
