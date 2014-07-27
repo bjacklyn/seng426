@@ -13,34 +13,34 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.ServerSocket;
 import javax.swing.JOptionPane;
+
 /**
- *
+ * 
  * @author Saad
  */
-public class BankServer implements Runnable{
-    private ServerSocket serverSocket;
-    /** Creates a new instance of BankSever */
-    public BankServer() throws IOException{
-        
-        serverSocket = new ServerSocket(8189);
-    }
-    
-    
-    public void run(){
-        try{
-            while(true){
-            
-                Socket incoming = serverSocket.accept();
-                Runnable chequeServer = new Echqueserver(incoming);
-                Thread bankThreading = new Thread(chequeServer);
-                bankThreading.start();
-            }
-        }
-        catch(IOException exp){
-            JOptionPane.showMessageDialog(null,exp.getMessage(),"Network Error",JOptionPane.ERROR_MESSAGE);
-            
-        }
-        
-    }
-    
+public class BankServer implements Runnable {
+	private ServerSocket serverSocket;
+
+	/** Creates a new instance of BankSever */
+	public BankServer() throws IOException {
+		serverSocket = new ServerSocket(8189);
+	}
+
+	public void run() {
+		try {
+			while (true) {
+
+				Socket incoming = serverSocket.accept();
+				Runnable chequeServer = new Echqueserver(incoming);
+				Thread bankThreading = new Thread(chequeServer);
+				bankThreading.start();
+			}
+		} catch (IOException exp) {
+			JOptionPane.showMessageDialog(null, exp.getMessage(),
+					"Network Error", JOptionPane.ERROR_MESSAGE);
+
+		}
+
+	}
+
 }
