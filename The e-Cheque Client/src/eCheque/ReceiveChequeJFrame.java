@@ -25,6 +25,8 @@ import java.net.ServerSocket;
 
 public class ReceiveChequeJFrame extends javax.swing.JFrame {
     
+	
+	 private static final int TIMEOUT = 10000;
      private EChequeRegisteration eChequeReg;
      private PrivateKey privKey;
      private ServerSocket serverSocket;
@@ -187,6 +189,11 @@ public class ReceiveChequeJFrame extends javax.swing.JFrame {
             if(!serverStartFlage){
                 serverSocket = new ServerSocket(8189);
                 serverStartFlage = true;
+                
+                if(jCheckBox1.isSelected())
+                {
+                	serverSocket.setSoTimeout(TIMEOUT);	
+                }
             }
             //Start Server Thread.
             Runnable threadingServer = new Echqueserver(jTServerState,serverDC,eChequeReg.getEWalletLoaction(),privKey,serverSocket);

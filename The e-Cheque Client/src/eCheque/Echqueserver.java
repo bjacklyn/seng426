@@ -55,9 +55,16 @@ public class Echqueserver implements Runnable {
 	// server = new ServerSocket(portID);
 	// }
 
-	private void acceptConnection() throws IOException {
-		ServerConnection = server.accept();
-	}
+	 private boolean acceptConnection()throws IOException{
+	     try {
+	    	 ServerConnection = server.accept();
+	     }
+	     catch(SocketTimeoutException ste)
+	     {
+	    	 return true;
+	     }
+		 return false;
+	} 
 
 	private void getsocketStream() throws Exception {
 		socketOutput = ServerConnection.getOutputStream();
@@ -178,12 +185,20 @@ public class Echqueserver implements Runnable {
 	}
 
 	public void RunServer() {
+		
+		boolean timeout = false;
+		
 		try {
 
 			screenShell.append("\n>>Status: Starting The Sever");
 			// startServer();
 			screenShell.append("\n>>Status: Wating for connection");
-			acceptConnection();
+			timeout = acceptConnection();
+	        if(timeout)
+	        {
+	        	 screenShell.append("\n>>Status: Timed out. Please try again");
+	        	 return;
+	        }
 			screenShell.append("\n>>Status: connection accepted");
 			getsocketStream();
 			screenShell.append("\n>>Status: Socket I/O complete");
@@ -198,7 +213,10 @@ public class Echqueserver implements Runnable {
 		}
 
 		finally {
-			closeConnection();
+			if(!timeout)
+	    	{
+	    		closeConnection();
+	    	}
 		}
 	}
 
