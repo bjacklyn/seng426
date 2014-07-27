@@ -18,13 +18,14 @@ import java.io.Serializable;
 
 public class EChequeRegisteration implements Serializable {
     
+	private static final long serialVersionUID = 1L;
     private String bankName;
     private String bankAddress;
     private String accountNumber;
     private String clientName;
     private String eWalletLocation;
-    private int userNameHash;
-    private int passwordHash;
+	private int userNameHash;
+	private int passwordHash;
     
     /** Creates a new instance of EChequeRegisteration */
     public EChequeRegisteration() {
