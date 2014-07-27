@@ -114,14 +114,22 @@ public class EchequeServer implements Runnable {
 
 			// starting database
 			EChequeDB chqDB = new EChequeDB();
-			chqDB.runDB(DatabaseMode.UPDATE, registerStat);
-
-			try {
-				// store client digital certificate
-				DigitalCertificateIO.saveDC(registDC, "Bank" + File.separator
-						+ registerClient.getClientName() + "DC.edc");
-				socketOutputObject.writeObject("registeration complete");
-				socketOutputObject.flush();
+			boolean success = chqDB.runDB(DatabaseMode.UPDATE, registerStat);
+		
+			try {		
+				if(success)
+				{
+					// store client digital certificate
+					DigitalCertificateIO.saveDC(registDC, "Bank" + File.separator
+							+ registerClient.getClientName() + "DC.edc");
+					socketOutputObject.writeObject("Success: Registeration complete");
+					socketOutputObject.flush();
+				}
+				else {
+					socketOutputObject.writeObject("Failure: Error Registering");
+					socketOutputObject.flush();
+				}
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

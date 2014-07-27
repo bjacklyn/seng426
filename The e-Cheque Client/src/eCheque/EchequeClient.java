@@ -167,7 +167,7 @@ public class EchequeClient implements Runnable {
 	private void processBankConection() throws IOException,
 			ClassNotFoundException {
 
-		String confirm;
+		String confirm = "";
 		SocketOutputObject.writeObject("Hello");
 		SocketOutputObject.flush();
 		SocketOutputObject.writeObject(bankmode);
@@ -178,12 +178,17 @@ public class EchequeClient implements Runnable {
 			SocketOutputObject.flush();
 			SocketOutputObject.writeObject(clientCerit);
 			SocketOutputObject.flush();
-			// save registration data.
-			ObjectOutputStream outObj = new ObjectOutputStream(
-					new FileOutputStream("Config.epc"));
-			outObj.writeObject(registrationData);
-			outObj.close();
-
+			
+			confirm = (String) SocketInputObject.readObject();
+			
+			if(confirm.contains("Success"))
+			{
+				// save registration data.
+				ObjectOutputStream outObj = new ObjectOutputStream(
+						new FileOutputStream("Config.epc"));
+				outObj.writeObject(registrationData);
+				outObj.close();
+			}
 		}
 		if (bankmode == BankMode.DEPOSIT) {
 			SocketOutputObject.writeObject(depositCheque);
@@ -191,13 +196,17 @@ public class EchequeClient implements Runnable {
 			SocketOutputObject.writeObject(registrationData.getAccountNumber());
 			SocketOutputObject.flush();
 			JOptionPane.showMessageDialog(null, "send info for deposit done");
+			
+			confirm = (String) SocketInputObject.readObject();
 
 		}
 		if (bankmode == BankMode.CANCEL) {
 			SocketOutputObject.writeObject(depositCheque);
 			SocketOutputObject.flush();
+			
+			confirm = (String) SocketInputObject.readObject();
 		}
-		confirm = (String) SocketInputObject.readObject();
+		
 		JOptionPane.showMessageDialog(null, confirm);
 
 	}

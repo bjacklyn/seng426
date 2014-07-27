@@ -143,31 +143,27 @@ public class Echqueserver implements Runnable {
 			chqIn.close();
 
 			// validate the received cheque.
-			
-			
 			File incoming = new File(walletPath + File.separator
 					+ "In Coming" + File.separator + cheqName + ".cry");
 			
 			InputStream in = new FileInputStream(incoming);
-			ByteArrayOutputStream out = new ByteArrayOutputStream((int)incoming.length());
-
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+		
 			// create AES object to decrypt the received cheque
 			AESCrypt aesObj = new AESCrypt();
 			Cipher aesCipher = aesObj.initializeCipher(sessionKey, 1);
 			aesObj.crypt(in, out, aesCipher);
 			in.close();
 			out.close();
-
+			
 			// verify the cheque siganture using the sender public key.
 			DigitalSignature digitalSign = new DigitalSignature();
 
 			// load decrypted chequeObject.
 			ECheque recivedChq = new ECheque();
-			
 			ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()));
 			recivedChq = (ECheque) objectIn.readObject();
-			in.close();
-			
+			objectIn.close();
 			String chqSign = ChequeReferenceString(recivedChq);
 
 			boolean verifySign = digitalSign.verifySignature(
@@ -176,12 +172,11 @@ public class Echqueserver implements Runnable {
 			if (verifySign) {
 				JOptionPane.showMessageDialog(null, "The signature is vaild",
 						"e-Cheque Clear", JOptionPane.INFORMATION_MESSAGE);
-				
+		
 				FileOutputStream fos = new FileOutputStream(walletPath + File.separator
 						+ "My Cheques" + File.separator + cheqName + ".sec");
 				fos.write(out.toByteArray());
 				fos.close();
-	
 			} else {
 				JOptionPane.showMessageDialog(null,
 						"The signature is not vaild", "e-Cheque not Clear",
