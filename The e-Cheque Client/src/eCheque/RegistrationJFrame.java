@@ -336,13 +336,13 @@ public class RegistrationJFrame extends javax.swing.JFrame {
         
         eWalletPath = getWalletLoaction("Set e-Wallet Location");
         File wallet;
-        wallet= new File(eWalletPath+File.separator+"InComing");
+        wallet= new File(eWalletPath+File.separator+"In Coming");
         wallet.mkdirs();
-        wallet= new File(eWalletPath+File.separator+"Outgoing");
+        wallet= new File(eWalletPath+File.separator+"Out going");
         wallet.mkdirs();
-        wallet = new File(eWalletPath+File.separator+"SecurityTools ");
+        wallet = new File(eWalletPath+File.separator+"Security Tools ");
         wallet.mkdirs();
-        wallet = new File(eWalletPath+File.separator+"MyCheques ");
+        wallet = new File(eWalletPath+File.separator+"My Cheques ");
         wallet.mkdirs();
         wallet = new File(eWalletPath+File.separator+"History ");
         wallet.mkdirs();
@@ -436,7 +436,7 @@ public class RegistrationJFrame extends javax.swing.JFrame {
                                                             KeyPair RSAKeys = keyGen.GenerateRSAKeys();
                                                             
                                                             // encrypt private key with user password. 
-                                                            outObj = new ObjectOutputStream(new FileOutputStream(eWalletPath+File.separator+"SecurityTools"+File.separator+"privateKey.key"));
+                                                            outObj = new ObjectOutputStream(new FileOutputStream(eWalletPath+File.separator+"Security Tools"+File.separator+"privateKey.key"));
                                                             outObj.writeObject(RSAKeys.getPrivate());
                                                             outObj.close();
                                                             
@@ -451,7 +451,7 @@ public class RegistrationJFrame extends javax.swing.JFrame {
                                                             aesCrypt.crypt(in,out,cipher);
                                                             in.close();
                                                             out.close();
-                                                            File control = new File(eWalletPath+File.separator+"SecurityTools"+File.separator+"privateKey.key");
+                                                            File control = new File(eWalletPath+File.separator+"Security Tools"+File.separator+"privateKey.key");
                                                             control.delete();
                                                             
                                                             // create Digital certificate object.
