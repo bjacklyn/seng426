@@ -1,5 +1,5 @@
 /*
- * BankSever.java
+ * BankServer.java
  *
  * Created on June 10, 2007, 1:06 AM
  *
@@ -12,8 +12,6 @@ package eCheque;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import javax.swing.JOptionPane;
 
 /**
  * 
@@ -36,12 +34,8 @@ public class BankServer implements Runnable {
 				Thread bankThreading = new Thread(chequeServer);
 				bankThreading.start();
 			}
-		} catch (IOException exp) {
-			JOptionPane.showMessageDialog(null, exp.getMessage(),
-					"Network Error", JOptionPane.ERROR_MESSAGE);
-
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		}
-
 	}
-
 }
