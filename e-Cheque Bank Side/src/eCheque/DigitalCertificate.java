@@ -14,7 +14,7 @@
 package eCheque;
 
 import java.io.Serializable;
-import java.security.*;
+import java.security.PublicKey;
 
 // this class generates Digital Signature
 
