@@ -444,7 +444,7 @@ public class RegistrationJFrame extends javax.swing.JFrame {
                                                             AESCrypt aesCrypt = new AESCrypt();
                                                             Key AES128 = aesCrypt.inilizeAESKeyByPassword(passTemp);
                                                             Cipher cipher = aesCrypt.initializeCipher(AES128,0);
-                                                            InputStream in = new FileInputStream(eWalletPath+File.separator+"Security Tool"+File.separator+"privateKey.key");
+                                                            InputStream in = new FileInputStream(eWalletPath+File.separator+"Security Tools"+File.separator+"privateKey.key");
                                                             OutputStream out = new FileOutputStream(eWalletPath+File.separator+"Security Tools"+File.separator+"Private Key.key"); 
                                                             
                                                             // encrypt the private key with the AES key and delete the plain key
@@ -467,7 +467,7 @@ public class RegistrationJFrame extends javax.swing.JFrame {
                                                             DigitalCertificateIO dcIO = new DigitalCertificateIO();
                                                             dcIO.SaveDC(dcObj,eWalletPath+File.separator+"Security Tools"+File.separator+registerationObj.getClientName()+"DigCert.edc");
                                                             
-                                                                                                                
+                                                            // C:\Users\tenhavej\Documents\Security Tool\privateKey.key                                                    
                                                             //Connect to the bank server to activate the e-cheque account.
                                                             Runnable client = new EchequeClient(8189,0,registerationObj.getBankAddress(),registerationObj,
                                                                     dcObj);
