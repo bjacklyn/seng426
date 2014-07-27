@@ -1,5 +1,5 @@
 /*
- * Digitalsigneture.java
+ * DigitalSignature.java
  *
  * Created on March 28, 2007, 4:03 PM
  *
@@ -17,19 +17,18 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 
-public class Digitalsigneture {
-	public Digitalsigneture() {
+public class DigitalSignature {
+	public DigitalSignature() {
 	}
 
 	// this function use to sign cheque data by RSA algorthem
-	public byte[] signeture(String message, PrivateKey privKey)
+	public byte[] sign(String message, PrivateKey privKey)
 			throws Exception {
 		Signature signmessage = Signature.getInstance("SHA1withRSA");
 		signmessage.initSign(privKey);
 		signmessage.update(message.getBytes());
 		byte[] signature = signmessage.sign();
 		return signature;
-
 	}
 
 	// this function use to verifay sign to cheque data by RSA algorthem
@@ -40,11 +39,8 @@ public class Digitalsigneture {
 		veryMessage.initVerify(pubKey);
 		veryMessage.update(message.getBytes());
 		if (!veryMessage.verify(messagesign))
-
 			return false;
-
 		else
-
 			return true;
 	}
 

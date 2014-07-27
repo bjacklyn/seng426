@@ -32,7 +32,7 @@ public class BankServer implements Runnable {
 			while (true) {
 
 				Socket incoming = serverSocket.accept();
-				Runnable chequeServer = new Echqueserver(incoming);
+				Runnable chequeServer = new EchequeServer(incoming);
 				Thread bankThreading = new Thread(chequeServer);
 				bankThreading.start();
 			}
