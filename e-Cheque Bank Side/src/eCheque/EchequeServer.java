@@ -84,8 +84,7 @@ public class EchequeServer implements Runnable {
 		chqDB.runDB(1, registerStat);
 
 		// store client digital certificate
-		DigitalCertificateIO dcIO = new DigitalCertificateIO();
-		dcIO.SaveDC(registDC,
+		DigitalCertificateIO.saveDC(registDC,
 				"Bank" + File.separator + registerClient.getClientName()
 						+ "DC.edc");
 

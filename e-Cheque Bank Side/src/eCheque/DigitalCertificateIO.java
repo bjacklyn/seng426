@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 
 public class DigitalCertificateIO {
 
-	public void SaveDC(DigitalCertificate a, String filePath)
+	public static void saveDC(DigitalCertificate a, String filePath)
 			throws IOException {
 		// To create a new file to store Digtial Certificate Object.
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(
@@ -20,7 +20,7 @@ public class DigitalCertificateIO {
 		out.close();
 	}
 
-	public DigitalCertificate readDigitalCertificate(String filePath)
+	public static DigitalCertificate readDigitalCertificate(String filePath)
 			throws IOException, ClassNotFoundException {
 		ObjectInputStream In = new ObjectInputStream(new FileInputStream(
 				new File(filePath)));
@@ -31,10 +31,4 @@ public class DigitalCertificateIO {
 		return DC;
 
 	}
-
-	/** Creates a new instance of SaveDC */
-	public DigitalCertificateIO() {
-
-	}
-
 }
