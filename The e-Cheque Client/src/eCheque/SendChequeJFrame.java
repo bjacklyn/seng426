@@ -12,10 +12,14 @@ package eCheque;
  */
 //import com.Trendy.swing.plaf.TrendyLookAndFeel;
 import java.io.IOException;
+
 import javax.crypto.Cipher;
 import javax.swing.UIManager;
 import javax.swing.JOptionPane;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.FileInputStream;
@@ -52,8 +56,11 @@ public class SendChequeJFrame extends javax.swing.JFrame {
     
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        
         fileChooser.setDialogTitle(dialogTitle);
+        
+        FileFilter chequeFilter = new FileNameExtensionFilter("Cheque Files (.sec)", "sec");
+        fileChooser.setFileFilter(chequeFilter);
+        
         int result = fileChooser.showOpenDialog( this );
  
         if ( result == JFileChooser.CANCEL_OPTION )
@@ -62,14 +69,15 @@ public class SendChequeJFrame extends javax.swing.JFrame {
         File fileName = fileChooser.getSelectedFile();
  
          // display error if invalid
-         if ( ( fileName == null ) || ( fileName.getName().equals( "" ) ) )
+         if ( ( fileName == null ) || ( fileName.getName().equals( "" ) ) || (!fileName.getName().endsWith(".sec")))
          {
-            JOptionPane.showMessageDialog( this, "Invalid File Name",
-              "Invalid File Name", JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog( this, "Invalid File Name or Extension",
+              "Invalid File", JOptionPane.ERROR_MESSAGE );
+            jBselectChqPTP.setText("Select Cheque");
            return "";
          } 
         cipherChequePath = fileName.getName();
-        JOptionPane.showMessageDialog(null,cipherChequePath);
+        jBselectChqPTP.setText(fileName.getName());
         return fileName.getPath();
         
     }
@@ -112,7 +120,7 @@ public class SendChequeJFrame extends javax.swing.JFrame {
         jCheckBox1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         jCheckBox1.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
-        jBselectChqPTP.setText("select cheque");
+        jBselectChqPTP.setText("Select cheque");
         jBselectChqPTP.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jBselectChqPTPMouseClicked(evt);
@@ -262,7 +270,6 @@ public class SendChequeJFrame extends javax.swing.JFrame {
                             Cipher aesCipher = aesKey128.initializeCipher(sessionKey,0);
 
                             InputStream in = new FileInputStream(chequePath);
-                            JOptionPane.showMessageDialog(null,eChequeRegisterdUser.getEWalletLoaction());
                             OutputStream out = new FileOutputStream(eChequeRegisterdUser.getEWalletLoaction()+File.separator+"Out going"+File.separator+cipherChequePath); 
                             aesKey128.crypt(in,out,aesCipher);
                             in.close();
@@ -295,7 +302,7 @@ public class SendChequeJFrame extends javax.swing.JFrame {
             else
             {
                 // you have to select cheque first
-                JOptionPane.showMessageDialog(null,"Youhave to");
+                JOptionPane.showMessageDialog(null,"You must select a cheque file");
             }
             
                      
@@ -307,10 +314,12 @@ public class SendChequeJFrame extends javax.swing.JFrame {
     // TODO add your handling code here:
     chequePath = getFileLoaction("Open Saved Cheque"); 
     
-    if(chequePath.length()!=0){
+    if(chequePath.length() != 0){
         selectChequeFlag = true;
-        
-        
+    }
+    else
+    {
+    	selectChequeFlag = false;
     }
        
     }//GEN-LAST:event_jBselectChqPTPMouseClicked
