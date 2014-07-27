@@ -42,7 +42,7 @@ public class EchequeClient implements Runnable {
 	private String walletPath;
 	private String hostname;
 	private int portID;
-	private int bankmode;
+	private BankMode bankmode;
 	private boolean getServerConnection;
 	private boolean getSocketConnection;
 	private boolean getProcessConnection;
@@ -64,7 +64,7 @@ public class EchequeClient implements Runnable {
 		bankConnection = false;
 	}
 
-	public EchequeClient(int port, int mode, String host,
+	public EchequeClient(int port, BankMode mode, String host,
 			EChequeRegisteration register, DigitalCertificate DC) {
 
 		portID = port;
@@ -76,7 +76,7 @@ public class EchequeClient implements Runnable {
 
 	}
 
-	public EchequeClient(int port, int mode, String host,
+	public EchequeClient(int port, BankMode mode, String host,
 			EChequeRegisteration register, ECheque chq) {
 		portID = port;
 		bankmode = mode;
@@ -170,10 +170,10 @@ public class EchequeClient implements Runnable {
 		String confirm;
 		SocketOutputObject.writeObject("Hello");
 		SocketOutputObject.flush();
-		SocketOutputObject.writeInt(bankmode);
+		SocketOutputObject.writeObject(bankmode);
 		SocketOutputObject.flush();
 
-		if (bankmode == 0) {
+		if (bankmode == BankMode.REGISTER) {
 			SocketOutputObject.writeObject(registrationData);
 			SocketOutputObject.flush();
 			SocketOutputObject.writeObject(clientCerit);
@@ -185,7 +185,7 @@ public class EchequeClient implements Runnable {
 			outObj.close();
 
 		}
-		if (bankmode == 1) {
+		if (bankmode == BankMode.DEPOSIT) {
 			SocketOutputObject.writeObject(depositCheque);
 			SocketOutputObject.flush();
 			SocketOutputObject.writeObject(registrationData.getAccountNumber());
@@ -193,7 +193,7 @@ public class EchequeClient implements Runnable {
 			JOptionPane.showMessageDialog(null, "send info for deposit done");
 
 		}
-		if (bankmode == 2) {
+		if (bankmode == BankMode.CANCEL) {
 			SocketOutputObject.writeObject(depositCheque);
 			SocketOutputObject.flush();
 		}

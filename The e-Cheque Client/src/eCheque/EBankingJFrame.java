@@ -196,13 +196,13 @@ public class EBankingJFrame extends javax.swing.JFrame {
             if(selectChequeFlag){             
                 
                 if(jCBDeposit.isSelected()){
-                    Runnable client = new EchequeClient(8189,1,hostName,registerData,depositCheque);
+                    Runnable client = new EchequeClient(8189,BankMode.DEPOSIT,hostName,registerData,depositCheque);
                     Thread clientThread = new Thread(client);
                     clientThread.start();
                 }
                 else if(jCBCancel.isSelected())
                 {
-                    Runnable client = new EchequeClient(8189,2,hostName,registerData,depositCheque);
+                    Runnable client = new EchequeClient(8189,BankMode.CANCEL,hostName,registerData,depositCheque);
                     Thread clientThread = new Thread(client);
                     clientThread.start();
                 }
