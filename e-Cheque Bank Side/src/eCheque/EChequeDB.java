@@ -28,7 +28,7 @@ public class EChequeDB {
 	private String password;
 	private Connection connection = null;
 	private Statement sqlStatement = null;
-	private int databaseMode;
+	private DatabaseMode databaseMode;
 	private ResultSet resultSet;
 
 	/** Creates a new instance of EChequeDB */
@@ -66,20 +66,20 @@ public class EChequeDB {
 		return true;
 	}
 
-	private void executeSQLStatment(String statment, int statType)
+	private void executeSQLStatment(String statment, DatabaseMode statType)
 			throws SQLException {
 
 		// Initialize sql statment and execute it.
-		if (statType == 0) {
+		if (statType == DatabaseMode.QUERY) {
 			resultSet = sqlStatement.executeQuery(statment);
 		}
 		
-		if (statType == 1) {
+		if (statType == DatabaseMode.UPDATE) {
 			sqlStatement.executeUpdate(statment);
 		}
 	}
 
-	public boolean runDB(int mode, String databaseStat) {
+	public boolean runDB(DatabaseMode mode, String databaseStat) {
 		databaseMode = mode;
 		boolean flag = false;
 		try {
@@ -102,7 +102,7 @@ public class EChequeDB {
 		return flag;
 	}
 
-	public boolean runDB(int mode, String databaseStat, double[] balance) {
+	public boolean runDB(DatabaseMode mode, String databaseStat, double[] balance) {
 		databaseMode = mode;
 		boolean flag = false;
 
@@ -135,7 +135,7 @@ public class EChequeDB {
 		return flag;
 	}
 
-	public boolean runDB(String databaseStat, int mode) {
+	public boolean runDB(String databaseStat, DatabaseMode mode) {
 		databaseMode = mode;
 		boolean flag = false;
 
