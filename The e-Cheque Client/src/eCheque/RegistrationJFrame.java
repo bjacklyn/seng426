@@ -11,24 +11,20 @@ package eCheque;
  * @author  Saad
  */
 //import com.Trendy.swing.plaf.TrendyLookAndFeel;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.security.spec.KeySpec;
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Cipher;
-import javax.swing.JLabel;
-import javax.swing.UIManager;
-import javax.swing.JOptionPane;
 import javax.swing.JFileChooser;
-import javax.swing.text.NumberFormatter;
-
-import java.security.*;
-import java.text.NumberFormat;
-import java.io.File;
+import javax.swing.JOptionPane;
 
 public class RegistrationJFrame extends javax.swing.JFrame {
     
