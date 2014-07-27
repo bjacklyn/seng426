@@ -11,27 +11,22 @@ package eCheque;
  * @author  Saad
  */
 //import com.Trendy.swing.plaf.TrendyLookAndFeel;
-import java.io.IOException;
-
-import javax.crypto.Cipher;
-import javax.swing.UIManager;
-import javax.swing.JOptionPane;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import java.io.File;
-import java.io.ObjectInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.*;
+import java.security.Key;
+
+import javax.crypto.Cipher;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class SendChequeJFrame extends javax.swing.JFrame {
     
     private String chequePath;
-    private String recieverIP;
     private String cipherChequePath;
     private boolean selectChequeFlag;
     private EChequeRegisteration eChequeRegisterdUser; 
