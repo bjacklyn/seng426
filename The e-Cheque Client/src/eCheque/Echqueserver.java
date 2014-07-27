@@ -13,20 +13,31 @@
  */
 package eCheque;
 
-import java.net.*;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
-import javax.crypto.Cipher;
-
-import com.sun.xml.internal.ws.message.ByteArrayAttachment;
-
-import java.security.*;
 
 public class Echqueserver implements Runnable {
 
@@ -151,7 +162,6 @@ public class Echqueserver implements Runnable {
 			DigitalSignature digitalSign = new DigitalSignature();
 
 			// load decrypted chequeObject.
-			EChequeIO readChq = new EChequeIO();
 			ECheque recivedChq = new ECheque();
 			
 			ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()));
