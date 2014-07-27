@@ -48,11 +48,11 @@ public class EchequeServer implements Runnable {
 
 	private void processConnection() {
 		boolean sessionDone = false;
-		int code;
+		BankMode mode;
 		if (!sessionDone) {
 			try {
 				socketInputObject.readObject();
-				code = socketInputObject.readInt();
+				mode = (BankMode) socketInputObject.readObject();
 			} catch(IOException ioe) {
 				ioe.printStackTrace();
 				return;
@@ -60,13 +60,13 @@ public class EchequeServer implements Runnable {
 				cnfe.printStackTrace();
 				return;
 			}
-			if (code == 0) {
+			if (mode == BankMode.REGISTER) {
 				registerClientInfo();
 			}
-			if (code == 1) {
+			if (mode == BankMode.DEPOSIT) {
 				depositCheque();
 			}
-			if (code == 2) {
+			if (mode == BankMode.CANCEL) {
 				cancelCheque();
 			}
 		}
