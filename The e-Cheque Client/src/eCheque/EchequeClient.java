@@ -42,7 +42,6 @@ public class EchequeClient implements Runnable {
 	private String walletPath;
 	private String hostname;
 	private int portID;
-	private int timeout;
 	private BankMode bankmode;
 	private boolean getServerConnection;
 	private boolean getSocketConnection;
@@ -50,7 +49,7 @@ public class EchequeClient implements Runnable {
 	private boolean bankConnection;
 
 	public EchequeClient(JTextArea screen, DigitalCertificate DC, Key aesKey,
-			String wPath, String cPath, String host, int port, int timeout) {
+			String wPath, String cPath, String host, int port) {
 
 		screenShell = screen;
 		clientCerit = DC;
@@ -59,7 +58,6 @@ public class EchequeClient implements Runnable {
 		chequePath = cPath;
 		hostname = host;
 		portID = port;
-		this.timeout = timeout;
 		getServerConnection = false;
 		getSocketConnection = false;
 		getProcessConnection = false;
@@ -90,8 +88,7 @@ public class EchequeClient implements Runnable {
 
 	private void ConnectToServer() throws Exception {
 
-		 ClientConnection = new Socket();
-		 ClientConnection.connect(new InetSocketAddress(InetAddress.getByName(hostname),portID), timeout);
+		ClientConnection = new Socket(InetAddress.getByName(hostname), portID);
 		getServerConnection = true;
 	}
 

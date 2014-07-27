@@ -58,13 +58,12 @@ public class Echqueserver implements Runnable {
 	 private boolean acceptConnection()throws IOException{
 	     try {
 	    	 ServerConnection = server.accept();
-	    	 Thread.sleep(15000);
+	    	 
 	     }
 	     catch(SocketTimeoutException ste)
 	     {
 	    	 return true;
 	     }
-	     catch(InterruptedException i){}
 		 return false;
 	} 
 
@@ -199,7 +198,7 @@ public class Echqueserver implements Runnable {
 	        if(timeout)
 	        {
 	        	 screenShell.append("\n>>Status: Timed out. Please try again");
-	        	   return;
+	        	 return;
 	        }
 			screenShell.append("\n>>Status: connection accepted");
 			getsocketStream();
