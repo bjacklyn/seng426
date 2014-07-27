@@ -387,7 +387,7 @@ public class RegistrationJFrame extends javax.swing.JFrame {
                     
                     if(clientName.length()!=0){
                         
-                    	// Sanitize the account number
+                    	// Sanitize the account number 
                     	boolean validAccount = true;
                     	int accountNum = 0;
                     	try {
