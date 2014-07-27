@@ -17,11 +17,15 @@ import java.net.*;
 import java.io.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.crypto.Cipher;
+
+import com.sun.xml.internal.ws.message.ByteArrayAttachment;
+
 import java.security.*;
 
 public class Echqueserver implements Runnable {
@@ -34,10 +38,8 @@ public class Echqueserver implements Runnable {
 	private InputStream socketInput;
 	private OutputStream socketOutput;
 	private JTextArea screenShell;
-	private EChequeRegisteration eChequeRegist;
 	private DigitalCertificate serverCerit;
 	private String walletPath;
-	private int portID;
 	private PrivateKey privKey;
 
 	public Echqueserver(JTextArea screen, DigitalCertificate DC, String wPath,
@@ -95,7 +97,6 @@ public class Echqueserver implements Runnable {
 
 			// get the wraeped key and uwraped it
 			byte[] wrappedKey;
-			byte[] unwrappedKey;
 			Key sessionKey;
 			int keyLength;
 
@@ -112,11 +113,11 @@ public class Echqueserver implements Runnable {
 			//
 			Calendar currTime = new GregorianCalendar();
 			String cheqName = "";
-			cheqName += currTime.get(currTime.YEAR);
-			cheqName += currTime.get(currTime.MONTH);
-			cheqName += currTime.get(currTime.DAY_OF_MONTH);
-			cheqName += currTime.get(currTime.HOUR_OF_DAY);
-			cheqName += currTime.get(currTime.MILLISECOND);
+			cheqName += currTime.get(Calendar.YEAR);
+			cheqName += currTime.get(Calendar.MONTH);
+			cheqName += currTime.get(Calendar.DAY_OF_MONTH);
+			cheqName += currTime.get(Calendar.HOUR_OF_DAY);
+			cheqName += currTime.get(Calendar.MILLISECOND);
 
 			// read the cheque from the socket
 			FileOutputStream chqIn = new FileOutputStream(walletPath
@@ -131,10 +132,13 @@ public class Echqueserver implements Runnable {
 			chqIn.close();
 
 			// validate the received cheque.
-			InputStream in = new FileInputStream(walletPath + File.separator
+			
+			
+			File incoming = new File(walletPath + File.separator
 					+ "In Coming" + File.separator + cheqName + ".cry");
-			OutputStream out = new FileOutputStream(walletPath + File.separator
-					+ "My Cheques" + File.separator + cheqName + ".sec");
+			
+			InputStream in = new FileInputStream(incoming);
+			ByteArrayOutputStream out = new ByteArrayOutputStream((int)incoming.length());
 
 			// create AES object to decrypt the received cheque
 			AESCrypt aesObj = new AESCrypt();
@@ -149,8 +153,11 @@ public class Echqueserver implements Runnable {
 			// load decrypted chequeObject.
 			EChequeIO readChq = new EChequeIO();
 			ECheque recivedChq = new ECheque();
-			recivedChq = readChq.readcheque(walletPath + File.separator
-					+ "My Cheques" + File.separator + cheqName + ".sec");
+			
+			ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()));
+			recivedChq = (ECheque) objectIn.readObject();
+			in.close();
+			
 			String chqSign = ChequeReferenceString(recivedChq);
 
 			boolean verifySign = digitalSign.verifySignature(
@@ -159,6 +166,12 @@ public class Echqueserver implements Runnable {
 			if (verifySign) {
 				JOptionPane.showMessageDialog(null, "The signature is vaild",
 						"e-Cheque Clear", JOptionPane.INFORMATION_MESSAGE);
+				
+				FileOutputStream fos = new FileOutputStream(walletPath + File.separator
+						+ "My Cheques" + File.separator + cheqName + ".sec");
+				fos.write(out.toByteArray());
+				fos.close();
+	
 			} else {
 				JOptionPane.showMessageDialog(null,
 						"The signature is not vaild", "e-Cheque not Clear",
