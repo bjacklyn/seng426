@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="org"/>
 	<classpathentry kind="lib" path="JARS/swing-layout-1.0.3.jar"/>
 	<classpathentry kind="lib" path="JARS/swing-worker-1.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
