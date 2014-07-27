@@ -15,7 +15,8 @@ import javax.swing.JOptionPane;
  */
 public class EChequeBankServer extends javax.swing.JFrame {
     
-    private boolean serverStartFlag;
+	private static final long serialVersionUID = 1L;
+	private boolean serverStartFlag;
     private Thread bankServerTread;
     /** Creates new form EChequeBankServer */
     public EChequeBankServer() {
@@ -124,11 +125,9 @@ public class EChequeBankServer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBStopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBStopMouseClicked
-// TODO add your handling code here:
         if(serverStartFlag){
             
             try{
-                
                 JOptionPane.showMessageDialog(null,"The Server is going to shutdown","System Information",JOptionPane.INFORMATION_MESSAGE);
                 bankServerTread.stop();    
                 Thread.sleep(5000);
@@ -144,7 +143,6 @@ public class EChequeBankServer extends javax.swing.JFrame {
     }//GEN-LAST:event_jBStopMouseClicked
 
     private void jBStartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBStartMouseClicked
-// TODO add your handling code here:
         if(!serverStartFlag){
             jTBankShell.append("\n\n>> Sever is going to start");
             
@@ -187,5 +185,4 @@ public class EChequeBankServer extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTBankShell;
     // End of variables declaration//GEN-END:variables
-    
 }

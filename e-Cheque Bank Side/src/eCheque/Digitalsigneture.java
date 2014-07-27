@@ -13,8 +13,9 @@
  */
 package eCheque;
 
-import java.security.*;
-import java.io.*;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.Signature;
 
 public class Digitalsigneture 
 {

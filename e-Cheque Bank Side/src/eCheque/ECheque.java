@@ -18,7 +18,8 @@ import java.io.Serializable;
 //this class  for inter data cheque form user
 public class ECheque implements Serializable
 {
-     private String accountholder;
+	 private static final long serialVersionUID = 1L;
+	 private String accountholder;
      private String accountNumber;
      private String bankname;
      private String payToOrderOf ;

@@ -17,7 +17,8 @@ import java.io.Serializable;
  */
 public class EChequeRegisteration implements Serializable {
     
-    private String bankName;
+	private static final long serialVersionUID = 1L;
+	private String bankName;
     private String bankAddress;
     private String accountNumber;
     private String clientName;
