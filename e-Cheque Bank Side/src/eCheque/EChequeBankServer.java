@@ -148,7 +148,7 @@ public class EChequeBankServer extends javax.swing.JFrame {
             
             try{
             
-                Runnable runBank = new BankSever();
+                Runnable runBank = new BankServer();
                 bankServerTread = new Thread(runBank);
                 bankServerTread.start();
                 serverStartFlag = true;
