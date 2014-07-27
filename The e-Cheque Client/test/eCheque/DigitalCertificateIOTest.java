@@ -60,13 +60,11 @@ public class DigitalCertificateIOTest {
 		actual.setValidFrom("from");
 		actual.setValidTo("to");
 		
-		DigitalCertificateIO dcIO = new DigitalCertificateIO();
-		
 		// save the digital certificate to disk
-		dcIO.SaveDC(actual, digitalCertificateFile);
+		DigitalCertificateIO.saveDC(actual, digitalCertificateFile);
 		
 		// read the digital certificate from disk
-		DigitalCertificate expected = dcIO.readDigitalCertificate(digitalCertificateFile);
+		DigitalCertificate expected = DigitalCertificateIO.readDigitalCertificate(digitalCertificateFile);
 		
 		// check whether they are equal after serializing/deserializing to disk
 		assertTrue(checkDigitalCertificateEquals(actual, expected));
@@ -79,10 +77,8 @@ public class DigitalCertificateIOTest {
 		DigitalCertificate cert = new DigitalCertificate();
 		cert.setHolderName("name");
 		
-		DigitalCertificateIO dcIO = new DigitalCertificateIO();
-		
 		// save the digital certificate to disk
-		dcIO.SaveDC(cert, digitalCertificateFile);
+		DigitalCertificateIO.saveDC(cert, digitalCertificateFile);
 	}
 	
 	@Test(expected=UTFDataFormatException.class)
