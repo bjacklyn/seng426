@@ -21,7 +21,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class Echqueserver implements Runnable {
+public class EchequeServer implements Runnable {
 
 	/** Creates a new instance of Echqueserver */
 	private Socket ServerConnection;
@@ -30,7 +30,7 @@ public class Echqueserver implements Runnable {
 	private InputStream socketInput;
 	private OutputStream socketOutput;
 
-	public Echqueserver(Socket socket) {
+	public EchequeServer(Socket socket) {
 		ServerConnection = socket;
 	}
 
